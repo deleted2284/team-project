@@ -1,8 +1,8 @@
-# Техническое задание: сортировка
+# Техническое задание: сортировка слиянием
 
 ## Задача
 
-Реализовать паттерн Strategy и собственный алгоритм сортировки объектов `Student`.
+Реализовать паттерн Strategy и собственный алгоритм сортировки слиянием объектов `Student`.
 
 ## Требования
 
@@ -12,39 +12,37 @@
 sort(MyList<T> list, Comparator<T> comparator)
 ```
 
-1. Создать класс `BubbleSortStrategy<T>`, реализующий `SortStrategy<T>`.
+1. Создать класс `MergeSortStrategy<T>`, реализующий `SortStrategy<T>`.
 
-2. Алгоритм сортировки реализовать самостоятельно. Готовые методы сортировки Java не использовать.
+2. Реализовать алгоритм сортировки слиянием самостоятельно.
 
-3. Сортировка должна работать с `MyList<T>`, а не со стандартными коллекциями Java.
+3. Готовые методы сортировки Java не использовать.
 
-4. Сортировка должна использовать переданный `Comparator<T>`.
+4. Сортировка должна работать с `MyList<T>`.
 
-5. Реализовать возможность сортировки `Student` по каждому из трёх полей:
+5. Сортировка должна использовать переданный `Comparator<T>`.
+
+6. Реализовать сортировку `Student` по каждому из трёх полей:
 
    - `groupNumber`;
    - `averageGrade`;
    - `recordBookNumber`.
 
-6. Для каждого поля создать отдельный компаратор:
+7. Создать отдельные компараторы:
 
    - `StudentGroupComparator`;
    - `StudentAverageGradeComparator`;
    - `StudentRecordBookComparator`.
 
-7. Алгоритм сортировки не должен зависеть от класса `Student`.
+8. `MergeSortStrategy` не должен зависеть от класса `Student`.
 
 ## Результат
 
-Должны быть реализованы:
-
 ```text
 SortStrategy.java
-BubbleSortStrategy.java
+MergeSortStrategy.java
 
 StudentGroupComparator.java
 StudentAverageGradeComparator.java
 StudentRecordBookComparator.java
 ```
-
-Классы должны работать с `MyList` и не использовать готовые реализации сортировки.
