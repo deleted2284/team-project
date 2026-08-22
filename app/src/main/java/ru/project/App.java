@@ -1,4 +1,4 @@
-package com.example;
+package ru.project;
 
 /**
  * Hello world!
