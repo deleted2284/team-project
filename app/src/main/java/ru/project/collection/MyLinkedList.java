@@ -69,7 +69,14 @@ public class MyLinkedList<T> implements MyList<T>
             temp = temp.getNext();
         }
 
+        T oldValue = (T) temp.getValue();
+        temp.setValue(value);
+        return oldValue;
+    }
 
+    public int size() {
+        return size;
+    }
     public String toString() {
         Object[] res = new Object[size];
         int index = 0;
