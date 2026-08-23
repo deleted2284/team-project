@@ -77,6 +77,10 @@ public class MyLinkedList<T> implements MyList<T>
     public int size() {
         return size;
     }
+    public boolean isEmpty()
+    {
+        return size == 0;
+    }
     public String toString() {
         Object[] res = new Object[size];
         int index = 0;
