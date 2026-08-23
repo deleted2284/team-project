@@ -34,6 +34,31 @@ public class MyLinkedList<T> implements MyList<T>
         }
         throw new IllegalArgumentException();
     }
+    public void remove(int index)
+    {
+        if (index == 0)
+        {
+            head = head.getNext();
+            size--;
+            return;
+
+        }
+        int currentIndex = 0;
+        Node temp = head;
+        while (temp != null)
+        {
+            if (currentIndex == index-1)
+            {
+                temp.setNext(temp.getNext().getNext());
+                size--;
+                return;
+            }
+            else {
+                temp = temp.getNext();
+                currentIndex++;
+            }
+        }
+    }
     public String toString() {
         Object[] res = new Object[size];
         int index = 0;
