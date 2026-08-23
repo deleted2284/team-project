@@ -59,6 +59,17 @@ public class MyLinkedList<T> implements MyList<T>
             }
         }
     }
+    public T set(int index, T value) {
+        if (index < 0 || index >= size) {
+            throw new IllegalArgumentException();
+        }
+
+        Node temp = head;
+        for (int i = 0; i < index; i++) {
+            temp = temp.getNext();
+        }
+
+
     public String toString() {
         Object[] res = new Object[size];
         int index = 0;
