@@ -1,5 +1,7 @@
 package ru.project.student;
 
+import java.util.Objects;
+
 public class Student {
     private final String groupNumber;
     private final double averageGrade;
@@ -31,8 +33,35 @@ public class Student {
     public String getRecordBookNumber() {
         return recordBookNumber;
     }
-@Override
-    public String toString(){
-        return "Student ="+groupNumber+
-}
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "groupNumber='" + groupNumber + '\'' +
+                ", averageGrade=" + averageGrade +
+                ", recordBookNumber='" + recordBookNumber + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+
+        }
+        Student student = (Student) obj;
+
+        return Double.compare(averageGrade, student.averageGrade) == 0
+                && Objects.equals(groupNumber, student.groupNumber)
+                && Objects.equals(recordBookNumber, student.recordBookNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(groupNumber, averageGrade, recordBookNumber);
+    }
 }
