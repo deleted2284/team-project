@@ -51,8 +51,12 @@ public class Student {
 
         if (obj == null || getClass() != obj.getClass()) {
             return false;
-
         }
+
+        if (this.hashCode() != obj.hashCode()) {
+            return false;
+        }
+
         Student student = (Student) obj;
 
         return Double.compare(averageGrade, student.averageGrade) == 0
