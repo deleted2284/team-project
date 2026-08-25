@@ -1,13 +1,13 @@
+import java.util.Arrays;
 public class MyLinkedList<T> implements MyList<T>
 {
-    private Node head;
+    private Node<T> head;
     private int size;
-
     public void add(T value) {
         if (head == null) {
             this.head = new Node<>(value);
         } else {
-            Node temp = head;
+            Node<T> temp = head;
             while (temp.getNext() != null) {
                 temp = temp.getNext();
             }
@@ -18,12 +18,12 @@ public class MyLinkedList<T> implements MyList<T>
     public T get(int index)
     {
         int currentIndex = 0;
-        Node temp = head;
+        Node<T> temp = head;
         while(temp != null)
         {
             if (currentIndex == index)
             {
-                return (T) temp.getValue();
+                return temp.getValue();
 
             }
             else {
@@ -36,6 +36,9 @@ public class MyLinkedList<T> implements MyList<T>
     }
     public void remove(int index)
     {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         if (index == 0)
         {
             head = head.getNext();
@@ -44,7 +47,7 @@ public class MyLinkedList<T> implements MyList<T>
 
         }
         int currentIndex = 0;
-        Node temp = head;
+        Node<T> temp = head;
         while (temp != null)
         {
             if (currentIndex == index-1)
@@ -64,16 +67,15 @@ public class MyLinkedList<T> implements MyList<T>
             throw new IllegalArgumentException();
         }
 
-        Node temp = head;
+        Node<T> temp = head;
         for (int i = 0; i < index; i++) {
             temp = temp.getNext();
         }
 
-        T oldValue = (T) temp.getValue();
+        T oldValue = temp.getValue();
         temp.setValue(value);
         return oldValue;
     }
-
     public int size() {
         return size;
     }
@@ -81,10 +83,11 @@ public class MyLinkedList<T> implements MyList<T>
     {
         return size == 0;
     }
+    @Override
     public String toString() {
         Object[] res = new Object[size];
         int index = 0;
-        Node temp = head;
+        Node<T> temp = head;
         while (temp != null) {
             res[index] = temp.getValue();
             index++;
@@ -92,7 +95,8 @@ public class MyLinkedList<T> implements MyList<T>
         }
         return Arrays.toString(res);
     }
-    public static class Node<T> {
+
+    private static class Node<T> {
         private T value;
         private Node<T> next;
 
@@ -116,6 +120,4 @@ public class MyLinkedList<T> implements MyList<T>
             return next;
         }
     }
-
-
 }
