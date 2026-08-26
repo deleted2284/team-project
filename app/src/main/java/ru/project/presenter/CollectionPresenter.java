@@ -6,26 +6,25 @@ import ru.project.model.AppState;
 import ru.project.student.Student;
 import ru.project.view.CollectionView;
 
-public class CollectionPresenter {
+public class CollectionPresenter extends BasePresenter {
 
-  private final AppState state;
   private final CollectionView view;
-  private final WindowBasedTextGUI gui;
 
   public CollectionPresenter(AppState state, CollectionView view, WindowBasedTextGUI gui) {
-    this.state = state;
+    super(state, gui);
     this.view = view;
-    this.gui = gui;
   }
 
+  @Override
   public void start() {
     MyList<Student> collection = state.getCollection();
 
     if (collection == null || collection.isEmpty()) {
-      view.showEmptyMessage(gui);
-      return;
+      view.showEmptyMessage();
+    } else {
+      view.showCollection(collection);
     }
 
-    view.showCollection(gui, collection);
+    view.show(gui);
   }
 }

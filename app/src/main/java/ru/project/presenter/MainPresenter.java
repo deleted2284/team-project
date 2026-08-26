@@ -1,28 +1,22 @@
 package ru.project.presenter;
 
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import ru.project.model.AppState;
-import ru.project.view.CollectionView;
 import ru.project.view.MainView;
 
-public class MainPresenter {
+public class MainPresenter extends BasePresenter {
 
-  private final AppState state;
   private final MainView view;
-  private final WindowBasedTextGUI gui;
-  private final CollectionPresenter collectionPresenter;
 
   public MainPresenter(AppState state, MainView view, WindowBasedTextGUI gui) {
-    this.state = state;
+    super(state, gui);
     this.view = view;
-    this.gui = gui;
-    this.collectionPresenter = new CollectionPresenter(state, new CollectionView(), gui);
+
+    bindActions();
   }
 
+  @Override
   public void start() {
-    bindActions();
     view.show(gui);
   }
 
@@ -37,34 +31,30 @@ public class MainPresenter {
   }
 
   private void showCollection() {
-    collectionPresenter.start();
+    // TODO
   }
 
   private void createCollection() {
-    showMessage("Меню создания коллекции.");
+    // TODO
   }
 
   private void saveCollection() {
-    showMessage("Меню сохранения коллекции.");
+    // TODO
   }
 
   private void sortCollection() {
-    showMessage("Меню сортировки коллекции.");
+    // TODO
   }
 
   private void searchCollection() {
-    showMessage("Меню поиска элемента.");
+    // TODO
   }
 
   private void countOccurrences() {
-    showMessage("Меню подсчёта количества вхождений.");
+    // TODO
   }
 
   private void exit() {
     view.close();
-  }
-
-  private void showMessage(String message) {
-    MessageDialog.showMessageDialog(gui, "Информация", message, MessageDialogButton.OK);
   }
 }
