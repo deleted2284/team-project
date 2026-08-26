@@ -7,9 +7,11 @@ public class Student {
     private final double averageGrade;
     private final int recordBookNumber;
 
+    // Конструктор с проверками
     public Student(String groupNumber, double averageGrade, int recordBookNumber) {
-        if (groupNumber == null || groupNumber.isBlank()) {
-            throw new IllegalArgumentException("Group number cannot be empty");
+        // Проверка groupNumber на формат
+        if (groupNumber == null || !groupNumber.matches("^[A-Z][0-9]{2}$")) {
+            throw new IllegalArgumentException("Group number must match format: one uppercase letter + two digits (e.g. A12)");
         }
         if (averageGrade < 0.0 || averageGrade > 5.0) {
             throw new IllegalArgumentException("Average grade must be between 0.0 and 5.0");
@@ -22,6 +24,7 @@ public class Student {
         this.recordBookNumber = recordBookNumber;
     }
 
+    // Геттеры — исправлен тип groupNumber (теперь String)
     public String getGroupNumber() {
         return groupNumber;
     }
@@ -34,6 +37,7 @@ public class Student {
         return recordBookNumber;
     }
 
+    // Методы копирования (with-методы)
     public Student withGroupNumber(String groupNumber) {
         return new Student(groupNumber, this.averageGrade, this.recordBookNumber);
     }
