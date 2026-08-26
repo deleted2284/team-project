@@ -1,4 +1,6 @@
-package sorting;
+package ru.project.sorting;
+
+import ru.project.list.MyList;
 
 import java.util.Comparator;
 

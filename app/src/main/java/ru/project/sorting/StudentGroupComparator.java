@@ -1,5 +1,6 @@
-package sorting;
+package ru.project.sorting;
 
+import ru.project.model.Student;
 import java.util.Comparator;
 
 public class StudentGroupComparator implements Comparator<Student> {
