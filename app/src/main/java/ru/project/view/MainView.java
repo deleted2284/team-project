@@ -1,62 +1,59 @@
 package ru.project.view;
 
-import com.googlecode.lanterna.gui2.ActionListBox;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.LinearLayout;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 
-public class MainView {
+public class MainView extends ActionListView {
 
-  private final BasicWindow window;
-  private final ActionListBox menu;
+  private Runnable showCollectionAction = this::defaultAction;
+  private Runnable createCollectionAction = this::defaultAction;
+  private Runnable saveCollectionAction = this::defaultAction;
+  private Runnable sortCollectionAction = this::defaultAction;
+  private Runnable searchCollectionAction = this::defaultAction;
+  private Runnable countOccurrencesAction = this::defaultAction;
+  private Runnable exitAction = this::defaultAction;
 
   public MainView() {
-    window = new BasicWindow("Главное меню");
+    super("Главное меню");
 
-    Panel panel = new Panel();
-    panel.setLayoutManager(new LinearLayout());
+    addItem("Показать текущую коллекцию", () -> showCollectionAction.run());
 
-    menu = new ActionListBox();
+    addItem("Меню создания новой коллекции", () -> createCollectionAction.run());
 
-    panel.addComponent(menu);
+    addItem("Меню сохранения текущей коллекции в файл", () -> saveCollectionAction.run());
 
-    window.setComponent(panel);
+    addItem("Меню сортировки текущей коллекции", () -> sortCollectionAction.run());
+
+    addItem("Меню поиска элемента в текущей коллекции", () -> searchCollectionAction.run());
+
+    addItem("Меню подсчёта количества вхождений элемента", () -> countOccurrencesAction.run());
+
+    addItem("Завершить выполнение программы", () -> exitAction.run());
   }
 
   public void setShowCollectionAction(Runnable action) {
-    menu.addItem("Показать текущую коллекцию", action);
+    showCollectionAction = action;
   }
 
   public void setCreateCollectionAction(Runnable action) {
-    menu.addItem("Меню создания новой коллекции", action);
+    createCollectionAction = action;
   }
 
   public void setSaveCollectionAction(Runnable action) {
-    menu.addItem("Меню сохранения текущей коллекции в файл", action);
+    saveCollectionAction = action;
   }
 
   public void setSortCollectionAction(Runnable action) {
-    menu.addItem("Меню сортировки текущей коллекции", action);
+    sortCollectionAction = action;
   }
 
   public void setSearchCollectionAction(Runnable action) {
-    menu.addItem("Меню поиска элемента в текущей коллекции", action);
+    searchCollectionAction = action;
   }
 
   public void setCountOccurrencesAction(Runnable action) {
-    menu.addItem("Меню подсчёта количества вхождений элемента", action);
+    countOccurrencesAction = action;
   }
 
   public void setExitAction(Runnable action) {
-    menu.addItem("Завершить выполнение программы", action);
-  }
-
-  public void show(WindowBasedTextGUI gui) {
-    gui.addWindowAndWait(window);
-  }
-
-  public void close() {
-    window.close();
+    exitAction = action;
   }
 }
