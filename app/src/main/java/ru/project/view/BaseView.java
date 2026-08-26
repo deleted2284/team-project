@@ -20,4 +20,8 @@ public abstract class BaseView {
   public void close() {
     window.close();
   }
+
+  protected void defaultAction() {
+    close();
+  }
 }
