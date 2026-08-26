@@ -68,4 +68,21 @@ public class Student {
     public int hashCode() {
         return Objects.hash(groupNumber, averageGrade, recordBookNumber);
     }
+
+    // ------------------------ Статические геттеры для границ и формата ------------------------
+    public static double getMinAverageGrade() {
+        return 0.0;
+    }
+
+    public static double getMaxAverageGrade() {
+        return 5.0;
+    }
+
+    public static int getMinRecordBookNumber() {
+        return 1;
+    }
+
+    public static String getGroupNumberPattern() {
+        return "^[A-Z][0-9]{2}$";
+    }
 }
