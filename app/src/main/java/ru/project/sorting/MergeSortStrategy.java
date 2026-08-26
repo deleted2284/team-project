@@ -1,6 +1,6 @@
 package ru.project.sorting;
 
-import ru.project.list.MyList;
+import ru.project.collection.MyList;
 
 import java.util.Comparator;
 
