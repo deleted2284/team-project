@@ -2,15 +2,26 @@ package ru.project.presenter;
 
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.model.AppState;
+import ru.project.view.CollectionView;
+import ru.project.view.CreateCollectionView;
 import ru.project.view.MainView;
 
 public class MainPresenter extends BasePresenter {
 
   private final MainView view;
 
+  private final CollectionPresenter collectionPresenter;
+  private final CreateCollectionPresenter createCollectionPresenter;
+
   public MainPresenter(AppState state, MainView view, WindowBasedTextGUI gui) {
     super(state, gui);
+
     this.view = view;
+
+    this.collectionPresenter = new CollectionPresenter(state, new CollectionView(), gui);
+
+    this.createCollectionPresenter =
+        new CreateCollectionPresenter(state, new CreateCollectionView(), gui);
 
     bindActions();
   }
@@ -31,11 +42,11 @@ public class MainPresenter extends BasePresenter {
   }
 
   private void showCollection() {
-    // TODO
+    collectionPresenter.start();
   }
 
   private void createCollection() {
-    // TODO
+    createCollectionPresenter.start();
   }
 
   private void saveCollection() {

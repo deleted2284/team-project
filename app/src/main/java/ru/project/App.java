@@ -23,6 +23,7 @@ public final class App {
       MultiWindowTextGUI gui = new MultiWindowTextGUI(screen);
 
       AppState state = new AppState();
+
       MainView view = new MainView();
 
       MainPresenter presenter = new MainPresenter(state, view, gui);
