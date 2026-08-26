@@ -2,39 +2,46 @@ package ru.project;
 
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import ru.project.ui.MainMenu;
-import ru.project.ui.Navigator;
+import ru.project.model.AppState;
+import ru.project.presenter.MainPresenter;
+import ru.project.view.MainView;
 
 public final class App {
 
   private App() {}
 
-  public static void main(String[] args) throws Exception {
-    DefaultTerminalFactory factory = new DefaultTerminalFactory();
-
-    Screen screen = new TerminalScreen(factory.createTerminal());
-
-    screen.startScreen();
+  public static void main(String[] args) {
+    Screen screen = null;
 
     try {
+      DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+
+      screen = terminalFactory.createScreen();
+      screen.startScreen();
+
       MultiWindowTextGUI gui = new MultiWindowTextGUI(screen);
 
-      // Application state
       AppState state = new AppState();
+      MainView view = new MainView();
 
-      // Controllers
-      CollectionController collectionController = new CollectionController(state);
+      MainPresenter presenter = new MainPresenter(state, view, gui);
 
-      // Navigation
-      Navigator navigator = new Navigator(gui, collectionController);
+      presenter.start();
 
-      // Application entry point
-      gui.addWindowAndWait(new MainMenu(navigator));
+    } catch (Exception e) {
+      System.err.println("Произошла ошибка при выполнении программы:");
+      e.printStackTrace();
 
     } finally {
-      screen.stopScreen();
+      if (screen != null) {
+        try {
+          screen.stopScreen();
+        } catch (Exception e) {
+          System.err.println("Не удалось корректно завершить работу терминала:");
+          e.printStackTrace();
+        }
+      }
     }
   }
 }
