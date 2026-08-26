@@ -3,7 +3,7 @@ package ru.project.student;
 public class StudentBuilder {
     private String groupNumber;
     private double averageGrade;
-    private String recordBookNumber;
+    private int recordBookNumber;
 
     public StudentBuilder setGroupNumber(String groupNumber) {
         this.groupNumber = groupNumber;
@@ -15,7 +15,7 @@ public class StudentBuilder {
         return this;
     }
 
-    public StudentBuilder setRecordBookNumber(String recordBookNumber) {
+    public StudentBuilder setRecordBookNumber(int recordBookNumber) {
         this.recordBookNumber = recordBookNumber;
         return this;
     }
