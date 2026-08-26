@@ -21,9 +21,18 @@ public final class App {
     try {
       MultiWindowTextGUI gui = new MultiWindowTextGUI(screen);
 
-      Navigator navigator = new Navigator(gui);
+      // Application state
+      AppState state = new AppState();
 
+      // Controllers
+      CollectionController collectionController = new CollectionController(state);
+
+      // Navigation
+      Navigator navigator = new Navigator(gui, collectionController);
+
+      // Application entry point
       gui.addWindowAndWait(new MainMenu(navigator));
+
     } finally {
       screen.stopScreen();
     }
