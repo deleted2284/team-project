@@ -1,6 +1,6 @@
 package ru.project.sorting;
 
-import ru.project.model.Student;
+import ru.project.student.Student;
 import java.util.Comparator;
 
 public class StudentRecordBookComparator implements Comparator<Student> {
