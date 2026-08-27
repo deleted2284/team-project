@@ -4,8 +4,7 @@ import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import ru.project.model.AppState;
-import ru.project.presenter.MainPresenter;
-import ru.project.view.MainView;
+import ru.project.ui.menu.MainMenu;
 
 public final class App {
 
@@ -24,11 +23,9 @@ public final class App {
 
       AppState state = new AppState();
 
-      MainView view = new MainView();
+      MainMenu mainMenu = new MainMenu(gui, state);
 
-      MainPresenter presenter = new MainPresenter(state, view, gui);
-
-      presenter.start();
+      mainMenu.show();
 
     } catch (Exception e) {
       System.err.println("Произошла ошибка при выполнении программы:");
