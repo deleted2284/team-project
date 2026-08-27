@@ -5,17 +5,18 @@ import java.util.Objects;
 public class Student {
   private final String groupNumber;
   private final double averageGrade;
-  private final String recordBookNumber;
+  private final int recordBookNumber;
 
-  Student(String groupNumber, double averageGrade, String recordBookNumber) {
-    if (groupNumber == null || groupNumber.isBlank()) {
-      throw new IllegalArgumentException("Group number cannot be empty");
+  public Student(String groupNumber, double averageGrade, int recordBookNumber) {
+    if (groupNumber == null || !groupNumber.matches("^[A-Z][0-9]{2}$")) {
+      throw new IllegalArgumentException(
+          "Group number must match format: one uppercase letter + two digits (e.g. A12)");
     }
     if (averageGrade < 0.0 || averageGrade > 5.0) {
       throw new IllegalArgumentException("Average grade must be between 0.0 and 5.0");
     }
-    if (recordBookNumber == null || recordBookNumber.isBlank()) {
-      throw new IllegalArgumentException("Record book number cannot be empty");
+    if (recordBookNumber <= 0) {
+      throw new IllegalArgumentException("Record book number must be positive");
     }
     this.groupNumber = groupNumber;
     this.averageGrade = averageGrade;
@@ -26,12 +27,20 @@ public class Student {
     return groupNumber;
   }
 
-  public double getAverageGrade() {
-    return averageGrade;
+  public int getRecordBookNumber() {
+    return recordBookNumber;
   }
 
-  public String getRecordBookNumber() {
-    return recordBookNumber;
+  public Student withGroupNumber(String groupNumber) {
+    return new Student(groupNumber, this.averageGrade, this.recordBookNumber);
+  }
+
+  public Student withAverageGrade(double averageGrade) {
+    return new Student(this.groupNumber, averageGrade, this.recordBookNumber);
+  }
+
+  public Student withRecordBookNumber(int recordBookNumber) {
+    return new Student(this.groupNumber, this.averageGrade, recordBookNumber);
   }
 
   @Override
@@ -42,9 +51,8 @@ public class Student {
         + '\''
         + ", averageGrade="
         + averageGrade
-        + ", recordBookNumber='"
+        + ", recordBookNumber="
         + recordBookNumber
-        + '\''
         + '}';
   }
 
@@ -63,14 +71,29 @@ public class Student {
     }
 
     Student student = (Student) obj;
-
     return Double.compare(averageGrade, student.averageGrade) == 0
-        && Objects.equals(groupNumber, student.groupNumber)
-        && Objects.equals(recordBookNumber, student.recordBookNumber);
+        && recordBookNumber == student.recordBookNumber
+        && Objects.equals(groupNumber, student.groupNumber);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(groupNumber, averageGrade, recordBookNumber);
+  }
+
+  public static double getMinAverageGrade() {
+    return 0.0;
+  }
+
+  public static double getMaxAverageGrade() {
+    return 5.0;
+  }
+
+  public static int getMinRecordBookNumber() {
+    return 1;
+  }
+
+  public static String getGroupNumberPattern() {
+    return "^[A-Z][0-9]{2}$";
   }
 }
