@@ -3,28 +3,34 @@ package ru.project.student;
 import java.util.Objects;
 
 public class Student {
+
+    public static final double MIN_AVERAGE_GRADE = 0.0;
+    public static final double MAX_AVERAGE_GRADE = 5.0;
+    public static final int MIN_RECORD_BOOK_NUMBER = 1;
+    public static final String GROUP_NUMBER_PATTERN = "^[A-Z][0-9]{2}$";
+
     private final String groupNumber;
     private final double averageGrade;
     private final int recordBookNumber;
 
-    // Конструктор с проверками
     public Student(String groupNumber, double averageGrade, int recordBookNumber) {
-        // Проверка groupNumber на формат
-        if (groupNumber == null || !groupNumber.matches("^[A-Z][0-9]{2}$")) {
-            throw new IllegalArgumentException("Group number must match format: one uppercase letter + two digits (e.g. A12)");
+        if (groupNumber == null || !groupNumber.matches(GROUP_NUMBER_PATTERN)) {
+            throw new IllegalArgumentException(
+                    "Group number must match pattern: " + GROUP_NUMBER_PATTERN);
         }
-        if (averageGrade < 0.0 || averageGrade > 5.0) {
-            throw new IllegalArgumentException("Average grade must be between 0.0 and 5.0");
+        if (averageGrade < MIN_AVERAGE_GRADE || averageGrade > MAX_AVERAGE_GRADE) {
+            throw new IllegalArgumentException(
+                    "Average grade must be between " + MIN_AVERAGE_GRADE + " and " + MAX_AVERAGE_GRADE);
         }
-        if (recordBookNumber <= 0) {
-            throw new IllegalArgumentException("Record book number must be positive");
+        if (recordBookNumber < MIN_RECORD_BOOK_NUMBER) {
+            throw new IllegalArgumentException(
+                    "Record book number must be at least " + MIN_RECORD_BOOK_NUMBER);
         }
         this.groupNumber = groupNumber;
         this.averageGrade = averageGrade;
         this.recordBookNumber = recordBookNumber;
     }
 
-    // Геттеры — исправлен тип groupNumber (теперь String)
     public String getGroupNumber() {
         return groupNumber;
     }
@@ -37,7 +43,6 @@ public class Student {
         return recordBookNumber;
     }
 
-    // Методы копирования (with-методы)
     public Student withGroupNumber(String groupNumber) {
         return new Student(groupNumber, this.averageGrade, this.recordBookNumber);
     }
@@ -50,7 +55,20 @@ public class Student {
         return new Student(this.groupNumber, this.averageGrade, recordBookNumber);
     }
 
-    @Override
+    }
+
+    public static double getMaxAverageGrade() {
+        return MAX_AVERAGE_GRADE;
+    }
+
+    public static int getMinRecordBookNumber() {
+        return MIN_RECORD_BOOK_NUMBER;
+    }
+
+    public static String getGroupNumberPattern() {
+        return GROUP_NUMBER_PATTERN;
+    }
+
     public String toString() {
         return "Student{" +
                 "groupNumber='" + groupNumber + '\'' +
@@ -61,8 +79,12 @@ public class Student {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         Student student = (Student) obj;
         return Double.compare(averageGrade, student.averageGrade) == 0
                 && recordBookNumber == student.recordBookNumber
@@ -72,22 +94,5 @@ public class Student {
     @Override
     public int hashCode() {
         return Objects.hash(groupNumber, averageGrade, recordBookNumber);
-    }
-
-    // ------------------------ Статические геттеры для границ и формата ------------------------
-    public static double getMinAverageGrade() {
-        return 0.0;
-    }
-
-    public static double getMaxAverageGrade() {
-        return 5.0;
-    }
-
-    public static int getMinRecordBookNumber() {
-        return 1;
-    }
-
-    public static String getGroupNumberPattern() {
-        return "^[A-Z][0-9]{2}$";
     }
 }
