@@ -1,3 +1,4 @@
+package ru.project.collection;
 import java.util.Arrays;
 public class MyLinkedList<T> implements MyList<T>
 {
