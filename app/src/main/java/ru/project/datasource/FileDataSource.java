@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collector;
 import ru.project.student.Student;
 import ru.project.collection.MyList;
+import ru.project.collection.MyLinkedList;
 
 public class FileDataSource implements DataSource{
     private String fileName;
@@ -22,16 +23,16 @@ public class FileDataSource implements DataSource{
     }
 
     @Override
-    public MyList<Student> fill(int size) {
-        Path path = Paths.get(fileName);
+    public MyList<Student> create() {
+        Path path = Paths.of(fileName);
         try(var lines = Files.lines(path)){
-            return lines.skip(1)
-                    .limit(size)
+            return lines
+                    //.skip(1)
                     .map(e -> StringParser.parseString(e))
                     .filter(e -> !(e == null))
-                    .collect(Collector.of(MyList::new,
-                            MyList::add,
-                            (left, right) -> left.addAll(right)));
+                    .collect(Collector.of(MyLinkedList::new,
+                            MyLinkedList::add,
+                            (left, right) -> left;
         }catch(FileNotFoundException e){
             System.out.println("File not found.");
             return null;
