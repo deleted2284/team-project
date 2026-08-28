@@ -5,5 +5,5 @@ import ru.project.collection.MyList;
 
 
 public interface DataSource {
-    MyList<Student> fill(int size);
+    MyList<Student> create();
 }
