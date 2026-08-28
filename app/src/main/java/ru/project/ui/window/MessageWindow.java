@@ -22,7 +22,7 @@ public class MessageWindow extends BaseWindow {
     setComponent(panel);
   }
 
-  public static void create(WindowBasedTextGUI gui, String message) {
+  public static void show(WindowBasedTextGUI gui, String message) {
     new MessageWindow(gui, message).show();
   }
 }
