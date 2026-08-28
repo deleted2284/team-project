@@ -2,9 +2,11 @@ package ru.project.ui.menu;
 
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import ru.project.collection.MyList;
 import ru.project.model.AppState;
+import ru.project.student.Student;
 import ru.project.ui.base.BaseWindow;
-import ru.project.ui.window.CurrentCollectionWindow;
+import ru.project.ui.window.CollectionDisplayWindow;
 import ru.project.ui.window.MessageWindow;
 
 public class MainMenu extends BaseWindow {
@@ -37,35 +39,37 @@ public class MainMenu extends BaseWindow {
   }
 
   private void showCurrentCollection() {
-    CurrentCollectionWindow window = new CurrentCollectionWindow(gui, state);
+    MyList<Student> currentCollection = state.getCurrentCollection();
+
+    BaseWindow window = new CollectionDisplayWindow(gui, currentCollection);
 
     window.show();
   }
 
   private void createCollection() {
-    CreateCollectionMenu window = new CreateCollectionMenu(gui, state);
+    BaseWindow window = new CreateCollectionMenu(gui, state);
 
     window.show();
   }
 
   private void saveCollection() {
     // TODO
-    MessageWindow.create(gui, "Не реализовано.");
+    MessageWindow.show(gui, "Не реализовано.");
   }
 
   private void sortCollection() {
     // TODO
-    MessageWindow.create(gui, "Не реализовано.");
+    MessageWindow.show(gui, "Не реализовано.");
   }
 
   private void searchCollection() {
     // TODO
-    MessageWindow.create(gui, "Не реализовано.");
+    MessageWindow.show(gui, "Не реализовано.");
   }
 
   private void countOccurrences() {
     // TODO
-    MessageWindow.create(gui, "Не реализовано.");
+    MessageWindow.show(gui, "Не реализовано.");
   }
 
   private void exit() {

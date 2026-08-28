@@ -6,20 +6,31 @@ import ru.project.student.Student;
 
 public class AppState {
 
-  private MyList<Student> collection;
+  private MyList<Student> currentCollection;
+  private MyList<Student> customDataCollection;
   private String currentFilePath;
 
   public AppState() {
-    this.collection = new MyLinkedList<>();
+    this.currentCollection = new MyLinkedList<>();
+    this.customDataCollection = new MyLinkedList<>();
     this.currentFilePath = null;
   }
 
-  public MyList<Student> getCollection() {
-    return collection;
+  public MyList<Student> getCurrentCollection() {
+    return currentCollection;
   }
 
-  public void setCollection(MyList<Student> collection) {
-    this.collection = collection;
+  public void setCurrentCollection(MyList<Student> currentCollection) {
+    this.currentCollection = currentCollection;
+  }
+
+  public MyList<Student> getCustomDataCollection() {
+    return customDataCollection;
+  }
+
+  public void setCustomDataCollection(MyList<Student> customDataCollection) {
+
+    this.customDataCollection = customDataCollection;
   }
 
   public String getCurrentFilePath() {
