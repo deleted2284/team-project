@@ -55,8 +55,6 @@ public class Student {
         return new Student(this.groupNumber, this.averageGrade, recordBookNumber);
     }
 
-    }
-
     public static double getMaxAverageGrade() {
         return MAX_AVERAGE_GRADE;
     }
