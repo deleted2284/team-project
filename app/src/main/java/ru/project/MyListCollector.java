@@ -27,4 +27,9 @@ public class MyListCollector <T> implements Collector<T, MyList<T>, MyList<T>>
             return list1;
         };
     }
+    @Override
+    public Function<MyList<T>, MyList<T>> finisher()
+    {
+        return list -> list;
+    }
 }
