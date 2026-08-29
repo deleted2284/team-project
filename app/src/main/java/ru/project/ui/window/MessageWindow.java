@@ -5,9 +5,9 @@ import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
-import ru.project.ui.base.BaseWindow;
+import ru.project.ui.base.BaseModalWindow;
 
-public class MessageWindow extends BaseWindow {
+public class MessageWindow extends BaseModalWindow {
 
   public MessageWindow(WindowBasedTextGUI gui, String message) {
     super("Информация", gui);
@@ -22,7 +22,7 @@ public class MessageWindow extends BaseWindow {
     setComponent(panel);
   }
 
-  public static void show(WindowBasedTextGUI gui, String message) {
-    new MessageWindow(gui, message).show();
+  public static void showModal(WindowBasedTextGUI gui, String message) {
+    new MessageWindow(gui, message).showModal();
   }
 }
