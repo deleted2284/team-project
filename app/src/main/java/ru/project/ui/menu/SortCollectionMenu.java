@@ -6,9 +6,12 @@ import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.model.AppState;
+import ru.project.model.SortField;
 import ru.project.model.SortMethod;
 import ru.project.ui.base.BaseModalWindow;
 import ru.project.ui.window.MessageWindow;
+import ru.project.ui.window.NormalSortSettingsWindow;
+import ru.project.ui.window.ParitySortSettingsWindow;
 import ru.project.ui.window.SortMethodSelectionWindow;
 
 public class SortCollectionMenu extends BaseModalWindow {
@@ -16,9 +19,14 @@ public class SortCollectionMenu extends BaseModalWindow {
   private final AppState state;
 
   private final Label sortMethodLabel;
+  private final Label sortFieldLabel;
+
   private final SortMethodSelectionWindow sortMethodSelectionWindow;
+  private final NormalSortSettingsWindow normalSortSettingsWindow;
+  private final ParitySortSettingsWindow paritySortSettingsWindow;
 
   private SortMethod selectedSortMethod;
+  private SortField selectedSortField;
 
   public SortCollectionMenu(WindowBasedTextGUI gui, AppState state) {
 
@@ -26,11 +34,14 @@ public class SortCollectionMenu extends BaseModalWindow {
 
     this.state = state;
     this.selectedSortMethod = SortMethod.NORMAL;
+    this.selectedSortField = SortField.GROUP_NUMBER;
 
     Panel panel = new Panel();
     panel.setLayoutManager(new LinearLayout());
 
     this.sortMethodLabel = new Label("Способ сортировки: " + getSortMethodName(selectedSortMethod));
+
+    this.sortFieldLabel = new Label("Сортировать по: " + getSortFieldName(selectedSortField));
 
     this.sortMethodSelectionWindow =
         new SortMethodSelectionWindow(
@@ -42,7 +53,17 @@ public class SortCollectionMenu extends BaseModalWindow {
                   "Способ сортировки: " + getSortMethodName(selectedSortMethod));
             });
 
+    this.normalSortSettingsWindow =
+        new NormalSortSettingsWindow(
+            gui,
+            sortField -> {
+              selectedSortField = sortField;
+            });
+
+    this.paritySortSettingsWindow = new ParitySortSettingsWindow(gui);
+
     panel.addComponent(sortMethodLabel);
+    panel.addComponent(sortFieldLabel);
 
     panel.addComponent(new Button("Выбрать способ сортировки", this::selectSortMethod));
 
@@ -57,7 +78,11 @@ public class SortCollectionMenu extends BaseModalWindow {
   }
 
   private void setupCurrentSortMethod() {
-    MessageWindow.showModal(gui, "Настройка способа сортировки пока не реализована.");
+    switch (selectedSortMethod) {
+      case NORMAL -> normalSortSettingsWindow.showModal();
+
+      case PARITY -> paritySortSettingsWindow.showModal();
+    }
   }
 
   private void selectSortMethod() {
@@ -68,17 +93,14 @@ public class SortCollectionMenu extends BaseModalWindow {
     if (state.getMainCollection() == null || state.getMainCollection().isEmpty()) {
 
       MessageWindow.showModal(gui, "Текущая коллекция пуста.");
+
       return;
     }
 
     switch (selectedSortMethod) {
-      case NORMAL:
-        sortNormally();
-        break;
+      case NORMAL -> sortNormally();
 
-      case PARITY:
-        sortByParity();
-        break;
+      case PARITY -> sortByParity();
     }
   }
 
@@ -96,6 +118,14 @@ public class SortCollectionMenu extends BaseModalWindow {
     return switch (sortMethod) {
       case NORMAL -> "Обычная сортировка";
       case PARITY -> "Сортировка по чётности";
+    };
+  }
+
+  private String getSortFieldName(SortField sortField) {
+    return switch (sortField) {
+      case GROUP_NUMBER -> "номеру группы";
+      case AVERAGE_GRADE -> "среднему баллу";
+      case RECORD_BOOK_NUMBER -> "номеру зачётной книжки";
     };
   }
 }
