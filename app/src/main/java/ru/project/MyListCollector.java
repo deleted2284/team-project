@@ -13,4 +13,9 @@ public class MyListCollector <T> implements Collector<T, MyList<T>, MyList<T>>
     {
         return () -> new MyLinkedList<>();
     }
+    @Override
+    public BiConsumer<MyList<T>, T> accumulator() {
+
+        return (list, element) -> list.add(element);
+    }
 }
