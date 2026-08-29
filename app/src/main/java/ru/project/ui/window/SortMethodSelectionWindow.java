@@ -23,6 +23,8 @@ public class SortMethodSelectionWindow extends BaseModalWindow {
 
     menu.addItem("Сортировка по чётности", () -> selectSortMethod(SortMethod.PARITY));
 
+    menu.addItem("Выйти", this::close);
+
     setComponent(menu);
   }
 
