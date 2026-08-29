@@ -1,4 +1,4 @@
-package ru.project.ui.menu;
+package ru.project.ui.creation;
 
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Label;
@@ -8,12 +8,10 @@ import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
 import ru.project.model.AppState;
-import ru.project.model.FillMethod;
 import ru.project.student.Student;
 import ru.project.ui.base.BaseModalWindow;
-import ru.project.ui.window.CustomDataSettingsWindow;
-import ru.project.ui.window.InputValueWindow;
-import ru.project.ui.window.MessageWindow;
+import ru.project.ui.common.InputValueWindow;
+import ru.project.ui.common.MessageWindow;
 
 public class CreateCollectionMenu extends BaseModalWindow {
 

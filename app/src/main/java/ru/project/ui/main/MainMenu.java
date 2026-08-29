@@ -1,4 +1,4 @@
-package ru.project.ui.menu;
+package ru.project.ui.main;
 
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
@@ -6,8 +6,10 @@ import ru.project.collection.MyList;
 import ru.project.model.AppState;
 import ru.project.student.Student;
 import ru.project.ui.base.BaseModalWindow;
-import ru.project.ui.window.CollectionDisplayWindow;
-import ru.project.ui.window.MessageWindow;
+import ru.project.ui.common.CollectionDisplayWindow;
+import ru.project.ui.common.MessageWindow;
+import ru.project.ui.creation.CreateCollectionMenu;
+import ru.project.ui.sorting.SortCollectionMenu;
 
 public class MainMenu extends BaseModalWindow {
 

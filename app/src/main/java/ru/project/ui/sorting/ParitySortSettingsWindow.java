@@ -1,4 +1,4 @@
-package ru.project.ui.window;
+package ru.project.ui.sorting;
 
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Label;

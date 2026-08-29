@@ -1,9 +1,8 @@
-package ru.project.ui.window;
+package ru.project.ui.sorting;
 
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import java.util.function.Consumer;
-import ru.project.model.SortMethod;
 import ru.project.ui.base.BaseModalWindow;
 
 public class SortMethodSelectionWindow extends BaseModalWindow {

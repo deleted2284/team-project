@@ -1,4 +1,4 @@
-package ru.project.ui.window;
+package ru.project.ui.creation;
 
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Label;
@@ -12,6 +12,9 @@ import ru.project.model.AppState;
 import ru.project.student.Student;
 import ru.project.student.StudentBuilder;
 import ru.project.ui.base.BaseModalWindow;
+import ru.project.ui.common.CollectionDisplayWindow;
+import ru.project.ui.common.InputValueWindow;
+import ru.project.ui.common.MessageWindow;
 
 public class CustomDataSettingsWindow extends BaseModalWindow {
 

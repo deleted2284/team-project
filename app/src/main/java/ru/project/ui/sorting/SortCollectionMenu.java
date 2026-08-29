@@ -1,4 +1,4 @@
-package ru.project.ui.menu;
+package ru.project.ui.sorting;
 
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Label;
@@ -6,13 +6,8 @@ import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.model.AppState;
-import ru.project.model.SortField;
-import ru.project.model.SortMethod;
 import ru.project.ui.base.BaseModalWindow;
-import ru.project.ui.window.MessageWindow;
-import ru.project.ui.window.NormalSortSettingsWindow;
-import ru.project.ui.window.ParitySortSettingsWindow;
-import ru.project.ui.window.SortMethodSelectionWindow;
+import ru.project.ui.common.MessageWindow;
 
 public class SortCollectionMenu extends BaseModalWindow {
 

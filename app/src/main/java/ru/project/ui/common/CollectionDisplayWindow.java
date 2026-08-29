@@ -1,4 +1,4 @@
-package ru.project.ui.window;
+package ru.project.ui.common;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.Button;

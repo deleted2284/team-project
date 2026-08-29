@@ -1,4 +1,4 @@
-package ru.project.ui.window;
+package ru.project.ui.sorting;
 
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.Button;
@@ -6,7 +6,6 @@ import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import java.util.function.Consumer;
-import ru.project.model.SortField;
 import ru.project.ui.base.BaseModalWindow;
 
 public class NormalSortSettingsWindow extends BaseModalWindow {

@@ -1,9 +1,8 @@
-package ru.project.ui.menu;
+package ru.project.ui.creation;
 
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import java.util.function.Consumer;
-import ru.project.model.FillMethod;
 import ru.project.ui.base.BaseModalWindow;
 
 public class FillMethodSelectionWindow extends BaseModalWindow {

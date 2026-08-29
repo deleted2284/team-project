@@ -1,4 +1,4 @@
-package ru.project.model;
+package ru.project.ui.creation;
 
 public enum FillMethod {
   CUSTOM,
