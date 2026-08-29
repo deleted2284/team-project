@@ -14,11 +14,13 @@ public class MainMenu extends BaseModalWindow {
   private final ActionListBox menu;
 
   private final BaseModalWindow createCollectionMenu;
+  private final BaseModalWindow sortCollectionMenu;
 
   public MainMenu(WindowBasedTextGUI gui, AppState state) {
     super("Главное меню", gui);
 
     this.createCollectionMenu = new CreateCollectionMenu(gui, state);
+    this.sortCollectionMenu = new SortCollectionMenu(gui, state);
 
     menu = new ActionListBox();
 
@@ -57,8 +59,7 @@ public class MainMenu extends BaseModalWindow {
   }
 
   private void sortCollection() {
-    // TODO
-    MessageWindow.showModal(gui, "Не реализовано.");
+    sortCollectionMenu.showModal();
   }
 
   private void searchCollection() {
