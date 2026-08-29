@@ -7,9 +7,9 @@ import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.TextBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import java.util.function.Predicate;
-import ru.project.ui.base.BaseWindow;
+import ru.project.ui.base.BaseModalWindow;
 
-public class InputValueWindow extends BaseWindow {
+public class InputValueWindow extends BaseModalWindow {
 
   private final TextBox textBox;
   private final Predicate<String> onSave;
@@ -45,7 +45,7 @@ public class InputValueWindow extends BaseWindow {
     String value = textBox.getText().trim();
 
     if (value.isEmpty()) {
-      MessageWindow.show(gui, "Значение не может быть пустым.");
+      MessageWindow.showModal(gui, "Значение не может быть пустым.");
       return;
     }
 

@@ -12,9 +12,9 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import ru.project.collection.MyList;
 import ru.project.student.Student;
-import ru.project.ui.base.BaseWindow;
+import ru.project.ui.base.BaseModalWindow;
 
-public class CollectionDisplayWindow extends BaseWindow {
+public class CollectionDisplayWindow extends BaseModalWindow {
 
   private final MyList<Student> collection;
 

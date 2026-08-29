@@ -5,25 +5,26 @@ import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.collection.MyList;
 import ru.project.model.AppState;
 import ru.project.student.Student;
-import ru.project.ui.base.BaseWindow;
+import ru.project.ui.base.BaseModalWindow;
 import ru.project.ui.window.CollectionDisplayWindow;
 import ru.project.ui.window.MessageWindow;
 
-public class MainMenu extends BaseWindow {
+public class MainMenu extends BaseModalWindow {
 
   private final ActionListBox menu;
-  private final AppState state;
+
+  private final BaseModalWindow createCollectionMenu;
 
   public MainMenu(WindowBasedTextGUI gui, AppState state) {
     super("Главное меню", gui);
 
-    this.state = state;
+    this.createCollectionMenu = new CreateCollectionMenu(gui, state);
 
     menu = new ActionListBox();
 
-    menu.addItem("Показать текущую коллекцию", this::showCurrentCollection);
+    menu.addItem("Показать текущую коллекцию", () -> showMainCollection(state));
 
-    menu.addItem("Меню создания новой коллекции", this::createCollection);
+    menu.addItem("Меню создания новой коллекции", this::showCreateCollectionMenu);
 
     menu.addItem("Меню сохранения текущей коллекции в файл", this::saveCollection);
 
@@ -38,38 +39,36 @@ public class MainMenu extends BaseWindow {
     setComponent(menu);
   }
 
-  private void showCurrentCollection() {
-    MyList<Student> currentCollection = state.getCurrentCollection();
+  private void showMainCollection(AppState state) {
+    MyList<Student> mainCollection = state.getMainCollection();
 
-    BaseWindow window = new CollectionDisplayWindow(gui, currentCollection);
+    BaseModalWindow window = new CollectionDisplayWindow(gui, mainCollection);
 
-    window.show();
+    window.showModal();
   }
 
-  private void createCollection() {
-    BaseWindow window = new CreateCollectionMenu(gui, state);
-
-    window.show();
+  private void showCreateCollectionMenu() {
+    createCollectionMenu.showModal();
   }
 
   private void saveCollection() {
     // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+    MessageWindow.showModal(gui, "Не реализовано.");
   }
 
   private void sortCollection() {
     // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+    MessageWindow.showModal(gui, "Не реализовано.");
   }
 
   private void searchCollection() {
     // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+    MessageWindow.showModal(gui, "Не реализовано.");
   }
 
   private void countOccurrences() {
     // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+    MessageWindow.showModal(gui, "Не реализовано.");
   }
 
   private void exit() {

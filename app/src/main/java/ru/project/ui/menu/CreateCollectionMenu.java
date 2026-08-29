@@ -5,14 +5,17 @@ import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import ru.project.collection.MyLinkedList;
+import ru.project.collection.MyList;
 import ru.project.model.AppState;
 import ru.project.model.FillMethod;
-import ru.project.ui.base.BaseWindow;
+import ru.project.student.Student;
+import ru.project.ui.base.BaseModalWindow;
 import ru.project.ui.window.CustomDataSettingsWindow;
 import ru.project.ui.window.InputValueWindow;
 import ru.project.ui.window.MessageWindow;
 
-public class CreateCollectionMenu extends BaseWindow {
+public class CreateCollectionMenu extends BaseModalWindow {
 
   private int collectionSize;
   private FillMethod selectedFillMethod;
@@ -20,15 +23,15 @@ public class CreateCollectionMenu extends BaseWindow {
   private final Label sizeLabel;
   private final Label fillMethodLabel;
 
-  private final AppState state;
+  private final CustomDataSettingsWindow customDataSettingsWindow;
 
   public CreateCollectionMenu(WindowBasedTextGUI gui, AppState state) {
     super("Создание новой коллекции", gui);
 
-    this.state = state;
-
     collectionSize = 0;
     selectedFillMethod = FillMethod.CUSTOM;
+
+    customDataSettingsWindow = new CustomDataSettingsWindow(gui, state, () -> collectionSize);
 
     Panel panel = new Panel();
     panel.setLayoutManager(new LinearLayout());
@@ -40,21 +43,21 @@ public class CreateCollectionMenu extends BaseWindow {
     panel.addComponent(sizeLabel);
     panel.addComponent(fillMethodLabel);
 
-    panel.addComponent(new Button("Задать размер", this::openCollectionSizeInputValueWindow));
+    panel.addComponent(new Button("Задать размер", this::showCollectionSizeInputValueWindow));
 
     panel.addComponent(new Button("Выбрать способ заполнения", this::selectFillMethod));
 
     panel.addComponent(
         new Button("Настроить текущий способ заполнения", this::setupCurrentFillMethod));
 
-    panel.addComponent(new Button("Создать новую коллекцию", this::createCollection));
+    panel.addComponent(new Button("Создать новую коллекцию", () -> updateMainCollection(state)));
 
     panel.addComponent(new Button("Выйти", this::close));
 
     setComponent(panel);
   }
 
-  private void openCollectionSizeInputValueWindow() {
+  private void showCollectionSizeInputValueWindow() {
     InputValueWindow window =
         new InputValueWindow(
             gui,
@@ -63,21 +66,21 @@ public class CreateCollectionMenu extends BaseWindow {
             collectionSize > 0 ? String.valueOf(collectionSize) : null,
             this::handleSizeEntered);
 
-    window.show();
+    window.showModal();
   }
 
   private boolean handleSizeEntered(String value) {
     try {
       int enteredSize = Integer.parseInt(value);
       if (enteredSize <= 0) {
-        MessageWindow.show(gui, "Размер должен быть больше 0.");
+        MessageWindow.showModal(gui, "Размер должен быть больше 0.");
         return false;
       }
       collectionSize = enteredSize;
       sizeLabel.setText("Размер: " + collectionSize);
       return true;
     } catch (NumberFormatException e) {
-      MessageWindow.show(gui, "Введите целое число.");
+      MessageWindow.showModal(gui, "Введите целое число.");
       return false;
     }
   }
@@ -85,22 +88,21 @@ public class CreateCollectionMenu extends BaseWindow {
   private void setupCurrentFillMethod() {
     switch (selectedFillMethod) {
       case CUSTOM -> {
-        BaseWindow window = new CustomDataSettingsWindow(gui, state, collectionSize);
-
-        window.show();
+        customDataSettingsWindow.showModal();
       }
 
       case FILE ->
           // TODO
-          MessageWindow.show(gui, "Не реализовано.");
+          MessageWindow.showModal(gui, "Не реализовано.");
 
       case RANDOM ->
-          MessageWindow.show(gui, "Для случайных данных дополнительные настройки не требуются.");
+          MessageWindow.showModal(
+              gui, "Для случайных данных дополнительные настройки не требуются.");
     }
   }
 
   private void selectFillMethod() {
-    BaseWindow menu =
+    BaseModalWindow menu =
         new FillMethodSelectionWindow(
             gui,
             fillMethod -> {
@@ -109,43 +111,52 @@ public class CreateCollectionMenu extends BaseWindow {
                   "Способ заполнения: " + getFillMethodName(selectedFillMethod));
             });
 
-    menu.show();
+    menu.showModal();
   }
 
-  private void createCollection() {
+  private void updateMainCollection(AppState state) {
     if (collectionSize <= 0) {
-      MessageWindow.show(gui, "Сначала задайте размер коллекции.");
+      MessageWindow.showModal(gui, "Сначала задайте размер коллекции.");
       return;
     }
 
     switch (selectedFillMethod) {
       case CUSTOM:
-        createCollectionFromCustomData();
+        createCollectionFromCustomData(state);
         break;
 
       case RANDOM:
-        createCollectionFromRandomData();
+        createCollectionFromRandomData(state);
         break;
 
       case FILE:
-        createCollectionFromFileData();
+        createCollectionFromFileData(state);
         break;
     }
   }
 
-  private void createCollectionFromCustomData() {
-    // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+  private void createCollectionFromCustomData(AppState state) {
+    MyList<Student> customDataCollection = state.getCustomDataCollection();
+
+    MyList<Student> mainCollection = new MyLinkedList<>();
+
+    for (int i = 0; i < customDataCollection.size(); i++) {
+      mainCollection.add(customDataCollection.get(i));
+    }
+
+    state.setMainCollection(mainCollection);
+
+    MessageWindow.showModal(gui, "Коллекция успешно создана.");
   }
 
-  private void createCollectionFromRandomData() {
+  private void createCollectionFromRandomData(AppState state) {
     // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+    MessageWindow.showModal(gui, "Не реализовано.");
   }
 
-  private void createCollectionFromFileData() {
+  private void createCollectionFromFileData(AppState state) {
     // TODO
-    MessageWindow.show(gui, "Не реализовано.");
+    MessageWindow.showModal(gui, "Не реализовано.");
   }
 
   private String getFillMethodName(FillMethod fillMethod) {

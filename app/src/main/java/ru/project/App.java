@@ -25,7 +25,7 @@ public final class App {
 
       MainMenu mainMenu = new MainMenu(gui, state);
 
-      mainMenu.show();
+      mainMenu.showModal();
 
     } catch (Exception e) {
       System.err.println("Произошла ошибка при выполнении программы:");

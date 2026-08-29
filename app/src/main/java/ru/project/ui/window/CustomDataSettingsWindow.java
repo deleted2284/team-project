@@ -5,17 +5,18 @@ import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import java.util.function.Supplier;
 import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
 import ru.project.model.AppState;
 import ru.project.student.Student;
 import ru.project.student.StudentBuilder;
-import ru.project.ui.base.BaseWindow;
+import ru.project.ui.base.BaseModalWindow;
 
-public class CustomDataSettingsWindow extends BaseWindow {
+public class CustomDataSettingsWindow extends BaseModalWindow {
 
   private final AppState state;
-  private final int collectionSize;
+  private final Supplier<Integer> requestedCollectionSize;
   private final StudentBuilder studentBuilder;
 
   private String groupNumber;
@@ -28,28 +29,17 @@ public class CustomDataSettingsWindow extends BaseWindow {
   private final Label recordBookNumberLabel;
   private final Label indexLabel;
 
-  private final MyList<Student> preparedCustomDataCollection;
+  private MyList<Student> preparedCustomDataCollection;
 
-  public CustomDataSettingsWindow(WindowBasedTextGUI gui, AppState state, int collectionSize) {
+  public CustomDataSettingsWindow(
+      WindowBasedTextGUI gui, AppState state, Supplier<Integer> collectionSize) {
 
     super("Настройка пользовательских данных", gui);
 
     this.state = state;
-    this.collectionSize = collectionSize;
+    this.requestedCollectionSize = collectionSize;
+
     this.studentBuilder = new StudentBuilder();
-    this.preparedCustomDataCollection = new MyLinkedList<>();
-
-    MyList<Student> customDataCollection = state.getCustomDataCollection();
-
-    int elementsToCopy = Math.min(customDataCollection.size(), collectionSize);
-
-    for (int i = 0; i < elementsToCopy; i++) {
-      preparedCustomDataCollection.add(customDataCollection.get(i));
-    }
-
-    for (int i = elementsToCopy; i < collectionSize; i++) {
-      preparedCustomDataCollection.add(null);
-    }
 
     Panel panel = new Panel();
     panel.setLayoutManager(new LinearLayout());
@@ -86,6 +76,29 @@ public class CustomDataSettingsWindow extends BaseWindow {
     setComponent(panel);
   }
 
+  @Override
+  public void showModal() {
+    prepareCustomDataCollection();
+    super.showModal();
+  }
+
+  private void prepareCustomDataCollection() {
+    preparedCustomDataCollection = new MyLinkedList<>();
+
+    int targetCollectionSize = requestedCollectionSize.get();
+    int currentCustomDataCollectionSize = state.getCustomDataCollection().size();
+
+    int elementsToCopy = Math.min(currentCustomDataCollectionSize, targetCollectionSize);
+
+    for (int i = 0; i < elementsToCopy; i++) {
+      preparedCustomDataCollection.add(state.getCustomDataCollection().get(i));
+    }
+
+    for (int i = elementsToCopy; i < targetCollectionSize; i++) {
+      preparedCustomDataCollection.add(null);
+    }
+  }
+
   private void setGroupNumber() {
     InputValueWindow window =
         new InputValueWindow(
@@ -95,7 +108,7 @@ public class CustomDataSettingsWindow extends BaseWindow {
             groupNumber,
             value -> {
               if (!value.matches(Student.getGroupNumberPattern())) {
-                MessageWindow.show(gui, "Номер группы должен соответствовать формату A12.");
+                MessageWindow.showModal(gui, "Номер группы должен соответствовать формату A12.");
                 return false;
               }
 
@@ -107,7 +120,7 @@ public class CustomDataSettingsWindow extends BaseWindow {
               return true;
             });
 
-    window.show();
+    window.showModal();
   }
 
   private void setAverageGrade() {
@@ -124,24 +137,27 @@ public class CustomDataSettingsWindow extends BaseWindow {
                 if (parsedValue < Student.getMinAverageGrade()
                     || parsedValue > Student.getMaxAverageGrade()) {
 
-                  MessageWindow.show(gui, "Средний балл должен быть от 0.0 до 5.0.");
+                  MessageWindow.showModal(gui, "Средний балл должен быть от 0.0 до 5.0.");
+
                   return false;
                 }
 
                 averageGrade = parsedValue;
+
                 studentBuilder.setAverageGrade(parsedValue);
 
                 averageGradeLabel.setText("Средний балл: " + averageGrade);
 
+                return true;
+
               } catch (NumberFormatException e) {
-                MessageWindow.show(gui, "Введите корректное число.");
+                MessageWindow.showModal(gui, "Введите корректное число.");
+
                 return false;
               }
-
-              return true;
             });
 
-    window.show();
+    window.showModal();
   }
 
   private void setRecordBookNumber() {
@@ -156,24 +172,28 @@ public class CustomDataSettingsWindow extends BaseWindow {
                 int parsedValue = Integer.parseInt(value);
 
                 if (parsedValue < Student.getMinRecordBookNumber()) {
-                  MessageWindow.show(gui, "Номер зачётной книжки должен быть положительным.");
+
+                  MessageWindow.showModal(gui, "Номер зачётной книжки должен быть положительным.");
+
                   return false;
                 }
 
                 recordBookNumber = parsedValue;
+
                 studentBuilder.setRecordBookNumber(parsedValue);
 
                 recordBookNumberLabel.setText("Номер зачётной книжки: " + recordBookNumber);
 
+                return true;
+
               } catch (NumberFormatException e) {
-                MessageWindow.show(gui, "Введите целое число.");
+                MessageWindow.showModal(gui, "Введите целое число.");
+
                 return false;
               }
-
-              return true;
             });
 
-    window.show();
+    window.showModal();
   }
 
   private void setObjectIndex() {
@@ -188,12 +208,16 @@ public class CustomDataSettingsWindow extends BaseWindow {
                 int index = Integer.parseInt(value);
 
                 if (index < 0) {
-                  MessageWindow.show(gui, "Индекс объекта не может быть отрицательным.");
+                  MessageWindow.showModal(gui, "Индекс объекта не может быть отрицательным.");
+
                   return false;
                 }
 
-                if (index >= collectionSize) {
-                  MessageWindow.show(gui, "Индекс должен быть меньше размера коллекции.");
+                int size = requestedCollectionSize.get();
+
+                if (index >= size) {
+                  MessageWindow.showModal(gui, "Индекс должен быть меньше размера коллекции.");
+
                   return false;
                 }
 
@@ -204,27 +228,28 @@ public class CustomDataSettingsWindow extends BaseWindow {
                 return true;
 
               } catch (NumberFormatException e) {
-                MessageWindow.show(gui, "Введите целое число.");
+                MessageWindow.showModal(gui, "Введите целое число.");
+
                 return false;
               }
             });
 
-    window.show();
+    window.showModal();
   }
 
   private void editObject() {
     if (!hasStudentData()) {
-      MessageWindow.show(gui, "Сначала задайте все поля студента.");
+      MessageWindow.showModal(gui, "Сначала задайте все поля студента.");
       return;
     }
 
     if (selectedObjectIndex == null) {
-      MessageWindow.show(gui, "Сначала задайте индекс объекта.");
+      MessageWindow.showModal(gui, "Сначала задайте индекс объекта.");
       return;
     }
 
     if (selectedObjectIndex >= preparedCustomDataCollection.size()) {
-      MessageWindow.show(gui, "Индекс объекта выходит за границы подготовленной коллекции.");
+      MessageWindow.showModal(gui, "Индекс объекта выходит за границы подготовленной коллекции.");
       return;
     }
 
@@ -232,31 +257,27 @@ public class CustomDataSettingsWindow extends BaseWindow {
 
     preparedCustomDataCollection.set(selectedObjectIndex, student);
 
-    MessageWindow.show(gui, "Данные объекта успешно заданы.");
+    MessageWindow.showModal(gui, "Данные объекта успешно заданы.");
   }
 
   private void apply() {
-    MyList<Student> currentCollection = new MyLinkedList<>();
-
-    for (int i = 0; i < preparedCustomDataCollection.size(); i++) {
-      currentCollection.add(preparedCustomDataCollection.get(i));
-    }
-
     state.setCustomDataCollection(preparedCustomDataCollection);
-    state.setCurrentCollection(currentCollection);
+    prepareCustomDataCollection();
 
-    close();
+    MessageWindow.showModal(gui, "Пользовательские данные успешно применены.");
   }
 
   private void preview() {
-    if (!hasStudentData()) {
-      MessageWindow.show(gui, "Для предпросмотра сначала задайте все поля студента.");
+    if (preparedCustomDataCollection == null || preparedCustomDataCollection.isEmpty()) {
+
+      MessageWindow.showModal(gui, "Подготовленная коллекция пуста.");
+
       return;
     }
 
-    Student student = studentBuilder.build();
+    CollectionDisplayWindow window = new CollectionDisplayWindow(gui, preparedCustomDataCollection);
 
-    MessageWindow.show(gui, student.toString());
+    window.showModal();
   }
 
   private boolean hasStudentData() {
