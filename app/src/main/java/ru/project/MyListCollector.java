@@ -32,4 +32,10 @@ public class MyListCollector <T> implements Collector<T, MyList<T>, MyList<T>>
     {
         return list -> list;
     }
+    @Override
+    public Set<Collector.Characteristics> characteristics() {
+        return java.util.Set.of(
+                Collector.Characteristics.IDENTITY_FINISH
+        );
+    }
 }
