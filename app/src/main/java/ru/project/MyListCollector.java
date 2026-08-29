@@ -18,4 +18,13 @@ public class MyListCollector <T> implements Collector<T, MyList<T>, MyList<T>>
 
         return (list, element) -> list.add(element);
     }
+    @Override
+    public BinaryOperator<MyList<T>> combiner() {
+        return (list1, list2) -> {
+            for (int i = 0; i < list2.size(); i++) {
+                list1.add(list2.get(i));
+            }
+            return list1;
+        };
+    }
 }
