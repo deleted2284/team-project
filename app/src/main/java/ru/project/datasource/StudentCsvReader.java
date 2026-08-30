@@ -1,0 +1,79 @@
+package ru.project.datasource;
+
+import ru.project.student.Student;
+import ru.project.student.StudentBuilder;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+public class StudentCsvReader implements Iterator<Student> {
+    private static final String GROUP_NUMBER = "groupNumber";
+    private static final String AVERAGE_GRADE = "averageGrade";
+    private static final String RECORD_BOOK_NUMBER = "recordBookNumber";
+
+    private final CSVParser parser;
+    private final Iterator<CSVRecord> records;
+
+    public StudentCsvReader(String absoluteFilePath) {
+        Path path = Paths.get(absoluteFilePath);
+        if (!path.isAbsolute()) {
+            throw new IllegalArgumentException("File path must be absolute");
+        }
+
+        try {
+            CSVFormat format = CSVFormat.DEFAULT.builder()
+                    .setHeader()
+                    .setSkipHeaderRecord(true)
+                    .build();
+            this.parser = CSVParser.parse(path, StandardCharsets.UTF_8, format);
+            validateHeader(parser.getHeaderMap());
+            this.records = parser.iterator();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public boolean hasNext() {
+        return records.hasNext();
+    }
+
+    @Override
+    public Student next() {
+        if (!records.hasNext()) {
+            throw new NoSuchElementException();
+        }
+
+        CSVRecord record = records.next();
+        if (record.size() != 3) {
+            throw new IllegalArgumentException(
+                    "Expected 3 columns, but got " + record.size());
+        }
+
+        double averageGrade = Double.parseDouble(record.get(AVERAGE_GRADE));
+        return new StudentBuilder()
+                .setGroupNumber(record.get(GROUP_NUMBER))
+                .setAverageGrade(averageGrade)
+                .setRecordBookNumber(record.get(RECORD_BOOK_NUMBER))
+                .build();
+    }
+
+    private static void validateHeader(Map<String, Integer> headerMap) {
+        String[] expected = {GROUP_NUMBER, AVERAGE_GRADE, RECORD_BOOK_NUMBER};
+        if (headerMap.size() != expected.length
+                || !headerMap.keySet().containsAll(Arrays.asList(expected))) {
+            throw new IllegalArgumentException("Invalid CSV header");
+        }
+    }
+}
