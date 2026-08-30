@@ -54,6 +54,10 @@ public class Student {
     return new Student(this.groupNumber, averageGrade, this.recordBookNumber);
   }
 
+  public Student withRecordBookNumber(int recordBookNumber) {
+    return new Student(this.groupNumber, this.averageGrade, recordBookNumber);
+  }
+
   public static double getMinAverageGrade() {
     return MIN_AVERAGE_GRADE;
   }
