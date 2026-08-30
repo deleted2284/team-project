@@ -1,4 +1,4 @@
-package ru.project.ui.creation;
+package ru.project.ui.creation.manual;
 
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Label;

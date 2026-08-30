@@ -12,6 +12,7 @@ import ru.project.student.Student;
 import ru.project.ui.base.BaseModalWindow;
 import ru.project.ui.common.InputValueWindow;
 import ru.project.ui.common.MessageWindow;
+import ru.project.ui.creation.manual.CustomDataSettingsWindow;
 
 public class CreateCollectionMenu extends BaseModalWindow {
 
