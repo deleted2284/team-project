@@ -12,32 +12,28 @@ import ru.project.collection.MyList;
 import ru.project.collection.MyLinkedList;
 
 public class FileDataSource implements DataSource{
-    private String fileName;
+    private final String fileName;
 
     public FileDataSource(String fileName) {
         this.fileName = fileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     @Override
     public MyList<Student> create() {
-        Path path = Paths.of(fileName);
-        try(var lines = Files.lines(path)){
-            return lines
-                    //.skip(1)
-                    .map(e -> StringParser.parseString(e))
-                    .filter(e -> !(e == null))
-                    .collect(Collector.of(MyLinkedList::new,
-                            MyLinkedList::add,
-                            (left, right) -> left;
-        }catch(FileNotFoundException e){
-            System.out.println("File not found.");
+        MyList<Student> resultList = new MyLinkedList<>();
+        try {
+            StudentCsvReader reader = new StudentCsvReader(fileName);
+            while reader.hasNext() {
+                result.append(reader.next());
+            }
+        }
+        catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
             return null;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        }
+        catch (NoSuchElementException e){
+            System.out.println("No such element");
+            return null;
         }
     }
 }
