@@ -20,7 +20,7 @@ public class RandomDataSource implements  DataSource{
     }
 
     private String getRandomGroupNumber(Random random){
-        char prefix = (char)(random.nextInt(26) + (int)'A')4
+        char prefix = (char)(random.nextInt(26) + (int)'A');
         String result = prefix + String.format("%02d", random.nextInt(100));
         return result;
     }
@@ -33,7 +33,7 @@ public class RandomDataSource implements  DataSource{
     @Override
     public MyList<Student> create() {
         if (upperBounRecordBookNumber < 0)
-            throw new IllegalException("The upper bound is negative!!!");
+            throw new IllegalArgumentException("The upper bound is negative!!!");
         Random random = new Random();
         MyList<Student> result = new MyLinkedList<>();
         for (short i = 0; i<size; i++){

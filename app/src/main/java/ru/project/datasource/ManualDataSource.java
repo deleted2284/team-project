@@ -18,7 +18,9 @@ public class ManualDataSource implements DataSource{
             String groupNumber,
             double averageGrade,
             int recordBookNumber
-    ){}
+    ){
+        return true;
+    }
     @Override
     public MyList<Student> create() {
         MyList<Student> result = new MyLinkedList<>();

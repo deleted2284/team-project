@@ -24,9 +24,10 @@ public class FileDataSource implements DataSource{
         MyList<Student> resultList = new MyLinkedList<>();
         try {
             StudentCsvReader reader = new StudentCsvReader(fileName);
-            while reader.hasNext() {
-                result.append(reader.next());
+            while (reader.hasNext()) {
+                resultList.add(reader.next());
             }
+            return resultList;
         }
         catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
