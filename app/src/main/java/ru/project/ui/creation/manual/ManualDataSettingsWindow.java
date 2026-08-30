@@ -5,28 +5,28 @@ import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
-import ru.project.model.AppState;
 import ru.project.student.Student;
 import ru.project.student.StudentBuilder;
 import ru.project.ui.base.BaseModalWindow;
 import ru.project.ui.common.CollectionDisplayWindow;
+import ru.project.ui.common.CollectionSizeInputWindow;
 import ru.project.ui.common.InputValueWindow;
 import ru.project.ui.common.MessageWindow;
 
-public class CustomDataSettingsWindow extends BaseModalWindow {
+public class ManualDataSettingsWindow extends BaseModalWindow {
 
-  private final AppState state;
-  private final Supplier<Integer> requestedCollectionSize;
   private final StudentBuilder studentBuilder;
 
-  private String groupNumber;
-  private Double averageGrade;
-  private Integer recordBookNumber;
-  private Integer selectedObjectIndex;
+  private Integer lastRequestedCollectionSize;
+  private String lastRequestedGroupNumber;
+  private Double lastRequestedAverageGrade;
+  private Integer lastRequestedRecordBookNumber;
+  private Integer lastRequestedSelectedObjectIndex;
 
+  private final Label sizeLabel;
   private final Label groupNumberLabel;
   private final Label averageGradeLabel;
   private final Label recordBookNumberLabel;
@@ -34,18 +34,22 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
 
   private MyList<Student> preparedCustomDataCollection;
 
-  public CustomDataSettingsWindow(
-      WindowBasedTextGUI gui, AppState state, Supplier<Integer> collectionSize) {
+  private final ManualFillSettings settings;
+  private final Consumer<ManualFillSettings> onApply;
+
+  public ManualDataSettingsWindow(WindowBasedTextGUI gui, Consumer<ManualFillSettings> onApply) {
 
     super("Настройка пользовательских данных", gui);
 
-    this.state = state;
-    this.requestedCollectionSize = collectionSize;
+    this.onApply = onApply;
 
+    this.settings = new ManualFillSettings();
     this.studentBuilder = new StudentBuilder();
 
     Panel panel = new Panel();
     panel.setLayoutManager(new LinearLayout());
+
+    sizeLabel = new Label("Размер: не задан");
 
     groupNumberLabel = new Label("Номер группы: не задан");
 
@@ -55,10 +59,13 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
 
     indexLabel = new Label("Индекс объекта: не задан");
 
+    panel.addComponent(sizeLabel);
     panel.addComponent(groupNumberLabel);
     panel.addComponent(averageGradeLabel);
     panel.addComponent(recordBookNumberLabel);
     panel.addComponent(indexLabel);
+
+    panel.addComponent(new Button("Задать размер", this::showCollectionSizeInputWindow));
 
     panel.addComponent(new Button("Задать номер группы", this::setGroupNumber));
 
@@ -79,25 +86,65 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
     setComponent(panel);
   }
 
+  private void showCollectionSizeInputWindow() {
+    CollectionSizeInputWindow window =
+        new CollectionSizeInputWindow(
+            gui, preparedCustomDataCollection.size(), this::handleCollectionSizeEntered);
+
+    window.showModal();
+  }
+
+  private void handleCollectionSizeEntered(int size) {
+    MyList<Student> resizedCollection = new MyLinkedList<>();
+
+    int currentCollectionSize = preparedCustomDataCollection.size();
+
+    int elementsToCopy = Math.min(currentCollectionSize, size);
+
+    for (int i = 0; i < elementsToCopy; i++) {
+      resizedCollection.add(preparedCustomDataCollection.get(i));
+    }
+
+    for (int i = elementsToCopy; i < size; i++) {
+      resizedCollection.add(null);
+    }
+
+    preparedCustomDataCollection = resizedCollection;
+    lastRequestedCollectionSize = size;
+
+    if (lastRequestedSelectedObjectIndex != null
+        && lastRequestedSelectedObjectIndex >= lastRequestedCollectionSize) {
+      lastRequestedSelectedObjectIndex = null;
+      indexLabel.setText("Индекс объекта: не задан");
+    }
+
+    sizeLabel.setText("Размер: " + lastRequestedCollectionSize);
+  }
+
   @Override
   public void showModal() {
     prepareCustomDataCollection();
+
     super.showModal();
   }
 
   private void prepareCustomDataCollection() {
+    MyList<Student> currentCustomDataCollection = settings.getCollection();
+
     preparedCustomDataCollection = new MyLinkedList<>();
 
-    int targetCollectionSize = requestedCollectionSize.get();
-    int currentCustomDataCollectionSize = state.getCustomDataCollection().size();
+    int currentCollectionSize = currentCustomDataCollection.size();
 
-    int elementsToCopy = Math.min(currentCustomDataCollectionSize, targetCollectionSize);
+    int targetSize =
+        lastRequestedCollectionSize == null ? currentCollectionSize : lastRequestedCollectionSize;
+
+    int elementsToCopy = Math.min(currentCollectionSize, targetSize);
 
     for (int i = 0; i < elementsToCopy; i++) {
-      preparedCustomDataCollection.add(state.getCustomDataCollection().get(i));
+      preparedCustomDataCollection.add(currentCustomDataCollection.get(i));
     }
 
-    for (int i = elementsToCopy; i < targetCollectionSize; i++) {
+    for (int i = elementsToCopy; i < targetSize; i++) {
       preparedCustomDataCollection.add(null);
     }
   }
@@ -108,17 +155,17 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
             gui,
             "Номер группы",
             "Введите номер группы (например, A12):",
-            groupNumber,
+            lastRequestedGroupNumber,
             value -> {
               if (!value.matches(Student.getGroupNumberPattern())) {
                 MessageWindow.showModal(gui, "Номер группы должен соответствовать формату A12.");
                 return false;
               }
 
-              groupNumber = value;
+              lastRequestedGroupNumber = value;
               studentBuilder.setGroupNumber(value);
 
-              groupNumberLabel.setText("Номер группы: " + groupNumber);
+              groupNumberLabel.setText("Номер группы: " + lastRequestedGroupNumber);
 
               return true;
             });
@@ -132,7 +179,7 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
             gui,
             "Средний балл",
             "Введите средний балл от 0.0 до 5.0:",
-            averageGrade == null ? null : String.valueOf(averageGrade),
+            lastRequestedAverageGrade == null ? null : String.valueOf(lastRequestedAverageGrade),
             value -> {
               try {
                 double parsedValue = Double.parseDouble(value);
@@ -145,11 +192,11 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
                   return false;
                 }
 
-                averageGrade = parsedValue;
+                lastRequestedAverageGrade = parsedValue;
 
                 studentBuilder.setAverageGrade(parsedValue);
 
-                averageGradeLabel.setText("Средний балл: " + averageGrade);
+                averageGradeLabel.setText("Средний балл: " + lastRequestedAverageGrade);
 
                 return true;
 
@@ -169,7 +216,9 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
             gui,
             "Номер зачётной книжки",
             "Введите номер зачётной книжки:",
-            recordBookNumber == null ? null : String.valueOf(recordBookNumber),
+            lastRequestedRecordBookNumber == null
+                ? null
+                : String.valueOf(lastRequestedRecordBookNumber),
             value -> {
               try {
                 int parsedValue = Integer.parseInt(value);
@@ -181,11 +230,12 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
                   return false;
                 }
 
-                recordBookNumber = parsedValue;
+                lastRequestedRecordBookNumber = parsedValue;
 
                 studentBuilder.setRecordBookNumber(parsedValue);
 
-                recordBookNumberLabel.setText("Номер зачётной книжки: " + recordBookNumber);
+                recordBookNumberLabel.setText(
+                    "Номер зачётной книжки: " + lastRequestedRecordBookNumber);
 
                 return true;
 
@@ -205,34 +255,31 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
             gui,
             "Индекс объекта",
             "Введите индекс объекта:",
-            selectedObjectIndex == null ? null : String.valueOf(selectedObjectIndex),
+            lastRequestedSelectedObjectIndex == null
+                ? null
+                : String.valueOf(lastRequestedSelectedObjectIndex),
             value -> {
               try {
                 int index = Integer.parseInt(value);
 
                 if (index < 0) {
                   MessageWindow.showModal(gui, "Индекс объекта не может быть отрицательным.");
-
                   return false;
                 }
 
-                int size = requestedCollectionSize.get();
-
-                if (index >= size) {
+                if (index >= preparedCustomDataCollection.size()) {
                   MessageWindow.showModal(gui, "Индекс должен быть меньше размера коллекции.");
-
                   return false;
                 }
 
-                selectedObjectIndex = index;
+                lastRequestedSelectedObjectIndex = index;
 
-                indexLabel.setText("Индекс объекта: " + selectedObjectIndex);
+                indexLabel.setText("Индекс объекта: " + lastRequestedSelectedObjectIndex);
 
                 return true;
 
               } catch (NumberFormatException e) {
                 MessageWindow.showModal(gui, "Введите целое число.");
-
                 return false;
               }
             });
@@ -246,28 +293,28 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
       return;
     }
 
-    if (selectedObjectIndex == null) {
+    if (lastRequestedSelectedObjectIndex == null) {
       MessageWindow.showModal(gui, "Сначала задайте индекс объекта.");
       return;
     }
 
-    if (selectedObjectIndex >= preparedCustomDataCollection.size()) {
+    if (lastRequestedSelectedObjectIndex >= preparedCustomDataCollection.size()) {
       MessageWindow.showModal(gui, "Индекс объекта выходит за границы подготовленной коллекции.");
       return;
     }
 
     Student student = studentBuilder.build();
 
-    preparedCustomDataCollection.set(selectedObjectIndex, student);
+    preparedCustomDataCollection.set(lastRequestedSelectedObjectIndex, student);
 
     MessageWindow.showModal(gui, "Данные объекта успешно заданы.");
   }
 
   private void apply() {
-    state.setCustomDataCollection(preparedCustomDataCollection);
-    prepareCustomDataCollection();
+    settings.setCollection(preparedCustomDataCollection);
+    onApply.accept(settings);
 
-    MessageWindow.showModal(gui, "Пользовательские данные успешно применены.");
+    MessageWindow.showModal(gui, "Настройки создания коллекции вручную успешно применены.");
   }
 
   private void preview() {
@@ -284,6 +331,8 @@ public class CustomDataSettingsWindow extends BaseModalWindow {
   }
 
   private boolean hasStudentData() {
-    return groupNumber != null && averageGrade != null && recordBookNumber != null;
+    return lastRequestedGroupNumber != null
+        && lastRequestedAverageGrade != null
+        && lastRequestedRecordBookNumber != null;
   }
 }
