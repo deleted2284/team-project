@@ -79,6 +79,14 @@ public class MyLinkedList<T> implements MyList<T> {
   public boolean isEmpty() {
     return size == 0;
   }
+  public void addAll(MyList<? extends T> collection) {
+    if (collection == null || collection.isEmpty()) {
+      return;
+    }
+    for (int i = 0; i < collection.size(); i++) {
+      add(collection.get(i));
+    }
+  }
 
   @Override
   public String toString() {
