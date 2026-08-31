@@ -62,10 +62,11 @@ public class StudentCsvReader implements Iterator<Student> {
         }
 
         double averageGrade = Double.parseDouble(record.get(AVERAGE_GRADE));
+        int recordBookNumber = Integer.parseInt(record.get(RECORD_BOOK_NUMBER));
         return new StudentBuilder()
                 .setGroupNumber(record.get(GROUP_NUMBER))
                 .setAverageGrade(averageGrade)
-                .setRecordBookNumber(record.get(RECORD_BOOK_NUMBER))
+                .setRecordBookNumber(recordBookNumber)
                 .build();
     }
 
