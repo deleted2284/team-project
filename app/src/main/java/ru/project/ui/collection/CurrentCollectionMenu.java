@@ -7,13 +7,15 @@ import ru.project.ui.base.BaseModalWindow;
 import ru.project.ui.collection.sorting.SortCollectionMenu;
 import ru.project.ui.common.CollectionDisplayWindow;
 import ru.project.ui.common.CollectionFileSaveWindow;
-import ru.project.ui.common.MessageWindow;
 
 public class CurrentCollectionMenu extends BaseModalWindow {
 
   private final AppState state;
 
   private final SortCollectionMenu sortCollectionMenu;
+
+  // private final SearchCollectionMenu searchCollectionMenu;
+  // private final CountOccurrencesMenu countOccurrencesMenu;
 
   public CurrentCollectionMenu(WindowBasedTextGUI gui, AppState state) {
 
@@ -22,6 +24,9 @@ public class CurrentCollectionMenu extends BaseModalWindow {
     this.state = state;
 
     this.sortCollectionMenu = new SortCollectionMenu(gui, state);
+
+    // this.searchCollectionMenu = new SearchCollectionMenu(gui, state);
+    // this.countCollectionMenu = new CountOccurrencesMenu(gui, state);
 
     ActionListBox menu = new ActionListBox();
 
@@ -53,12 +58,14 @@ public class CurrentCollectionMenu extends BaseModalWindow {
   }
 
   private void searchCollection() {
-    // TODO
-    MessageWindow.showModal(gui, "Не реализовано.");
+    // SearchCollectionMenu searchCollectionMenu = new SearchCollectionMenu(gui, state);
+    //
+    // searchCollectionMenu.showModal();
   }
 
   private void countOccurrences() {
-    // TODO
-    MessageWindow.showModal(gui, "Не реализовано.");
+    // CountOccurrencesMenu countOccurrencesMenu = new CountOccurrencesMenu(gui, state);
+    //
+    // countOccurrencesMenu.showModal();
   }
 }
