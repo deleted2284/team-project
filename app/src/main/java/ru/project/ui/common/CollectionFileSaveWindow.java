@@ -1,0 +1,76 @@
+package ru.project.ui.common;
+
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import ru.project.collection.MyList;
+import ru.project.student.Student;
+
+public class CollectionFileSaveWindow {
+
+  private final WindowBasedTextGUI gui;
+  private final MyList<Student> collection;
+
+  public CollectionFileSaveWindow(WindowBasedTextGUI gui, MyList<Student> collection) {
+
+    this.gui = gui;
+    this.collection = collection;
+  }
+
+  public void showModal() {
+    File selectedFile = selectFile();
+
+    if (selectedFile == null) {
+      return;
+    }
+
+    if (selectedFile.exists()) {
+      saveToFile(selectedFile);
+      return;
+    }
+
+    MessageDialogButton result =
+        MessageDialog.showMessageDialog(
+            gui,
+            "Создание файла",
+            "Файл не существует. Создать новый файл?",
+            MessageDialogButton.Yes,
+            MessageDialogButton.No);
+
+    if (result == MessageDialogButton.Yes) {
+      saveToFile(selectedFile);
+    }
+  }
+
+  private File selectFile() {
+    return new FileDialogBuilder()
+        .setTitle("Сохранение коллекции")
+        .setDescription("Выберите файл:")
+        .setActionLabel("Сохранить")
+        .build()
+        .showDialog(gui);
+  }
+
+  private void saveToFile(File file) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+
+      for (int i = 0; i < collection.size(); i++) {
+        Student student = collection.get(i);
+
+        writer.write(student == null ? "null" : student.toString());
+
+        writer.newLine();
+      }
+
+      MessageWindow.showModal(gui, "Коллекция успешно сохранена.");
+
+    } catch (IOException e) {
+      MessageWindow.showModal(gui, "Не удалось сохранить коллекцию.");
+    }
+  }
+}

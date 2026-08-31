@@ -4,7 +4,7 @@ import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import ru.project.model.AppState;
-import ru.project.ui.main.MainMenu;
+import ru.project.ui.MainMenu;
 
 public final class App {
 
