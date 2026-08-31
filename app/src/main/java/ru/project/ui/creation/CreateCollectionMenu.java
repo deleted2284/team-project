@@ -50,10 +50,10 @@ public class CreateCollectionMenu extends BaseModalWindow {
 
     panel.addComponent(fillMethodLabel);
 
-    panel.addComponent(new Button("Выбрать способ заполнения", this::selectFillMethod));
+    panel.addComponent(new Button("Выбрать способ заполнения...", this::selectFillMethod));
 
     panel.addComponent(
-        new Button("Настроить текущий способ заполнения", this::setupCurrentFillMethod));
+        new Button("Настроить текущий способ заполнения...", this::setupCurrentFillMethod));
 
     panel.addComponent(new Button("Создать новую коллекцию", this::updateMainCollection));
 

@@ -25,15 +25,15 @@ public class CurrentCollectionMenu extends BaseModalWindow {
 
     ActionListBox menu = new ActionListBox();
 
-    menu.addItem("Показать коллекцию", this::showCurrentCollection);
+    menu.addItem("Показать коллекцию...", this::showCurrentCollection);
 
-    menu.addItem("Сохранить коллекцию в файл", this::saveCurrentCollection);
+    menu.addItem("Сохранить коллекцию в файл...", this::saveCurrentCollection);
 
-    menu.addItem("Сортировать коллекцию", sortCollectionMenu::showModal);
+    menu.addItem("Меню сортировки коллекции", sortCollectionMenu::showModal);
 
-    menu.addItem("Поиск элемента в коллекции", this::searchCollection);
+    menu.addItem("Меню поиска элемента в коллекции", this::searchCollection);
 
-    menu.addItem("Подсчёт количества вхождений элемента", this::countOccurrences);
+    menu.addItem("Меню подсчёта количества вхождений элемента", this::countOccurrences);
 
     menu.addItem("Выйти", this::close);
 

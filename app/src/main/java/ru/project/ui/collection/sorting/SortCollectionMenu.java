@@ -36,7 +36,8 @@ public class SortCollectionMenu extends BaseModalWindow {
 
     this.sortMethodLabel = new Label("Способ сортировки: " + getSortMethodName(selectedSortMethod));
 
-    this.sortFieldLabel = new Label("Сортировать по: " + getSortFieldName(selectedSortField));
+    this.sortFieldLabel =
+        new Label("Сортировать по: " + getSortFieldName(selectedSortMethod, selectedSortField));
 
     this.sortMethodSelectionWindow =
         new SortMethodSelectionWindow(
@@ -46,6 +47,9 @@ public class SortCollectionMenu extends BaseModalWindow {
 
               sortMethodLabel.setText(
                   "Способ сортировки: " + getSortMethodName(selectedSortMethod));
+
+              sortFieldLabel.setText(
+                  "Сортировать по: " + getSortFieldName(selectedSortMethod, selectedSortField));
             });
 
     this.normalSortSettingsWindow =
@@ -53,6 +57,9 @@ public class SortCollectionMenu extends BaseModalWindow {
             gui,
             sortField -> {
               selectedSortField = sortField;
+
+              sortFieldLabel.setText(
+                  "Сортировать по: " + getSortFieldName(selectedSortMethod, selectedSortField));
             });
 
     this.paritySortSettingsWindow = new ParitySortSettingsWindow(gui);
@@ -116,7 +123,14 @@ public class SortCollectionMenu extends BaseModalWindow {
     };
   }
 
-  private String getSortFieldName(SortField sortField) {
+  private String getSortFieldName(SortMethod sortMethod, SortField sortField) {
+    return switch (sortMethod) {
+      case NORMAL -> getNormalSortFieldName(sortField);
+      case PARITY -> "номеру зачётной книжки";
+    };
+  }
+
+  private String getNormalSortFieldName(SortField sortField) {
     return switch (sortField) {
       case GROUP_NUMBER -> "номеру группы";
       case AVERAGE_GRADE -> "среднему баллу";
