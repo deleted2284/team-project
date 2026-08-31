@@ -34,7 +34,7 @@ public class FileDataSource implements DataSource{
             return null;
         }
         catch (NoSuchElementException e){
-            System.out.println("No such element");
+            System.out.println(e.getMessage() + "No such element");
             return null;
         }
     }
