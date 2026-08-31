@@ -13,4 +13,5 @@ public interface MyList<T> {
   int size();
 
   boolean isEmpty();
+  void addAll(MyList<? extends T> collection);
 }
