@@ -56,7 +56,7 @@ public class StudentCsvReader implements Iterator<Student> {
     public Student next() {
         lineOfFile++;
         if (!records.hasNext()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Problem at line " + lineOfFile + ".");
         }
 
         CSVRecord record = records.next();
