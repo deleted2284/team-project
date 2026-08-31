@@ -25,7 +25,10 @@ public class StudentCsvReader implements Iterator<Student> {
     private final CSVParser parser;
     private final Iterator<CSVRecord> records;
 
+    private int lineOfFile;
+
     public StudentCsvReader(String absoluteFilePath) {
+        lineOfFile = 0;
         Path path = Paths.get(absoluteFilePath);
         if (!path.isAbsolute()) {
             throw new IllegalArgumentException("File path must be absolute");
@@ -51,6 +54,7 @@ public class StudentCsvReader implements Iterator<Student> {
 
     @Override
     public Student next() {
+        lineOfFile++;
         if (!records.hasNext()) {
             throw new NoSuchElementException();
         }
@@ -58,16 +62,21 @@ public class StudentCsvReader implements Iterator<Student> {
         CSVRecord record = records.next();
         if (record.size() != 3) {
             throw new IllegalArgumentException(
-                    "Expected 3 columns, but got " + record.size());
+                    "Problem at line " + lineOfFile + ".Expected 3 columns, but got " + record.size());
         }
-
-        double averageGrade = Double.parseDouble(record.get(AVERAGE_GRADE));
-        int recordBookNumber = Integer.parseInt(record.get(RECORD_BOOK_NUMBER));
-        return new StudentBuilder()
-                .setGroupNumber(record.get(GROUP_NUMBER))
-                .setAverageGrade(averageGrade)
-                .setRecordBookNumber(recordBookNumber)
-                .build();
+        try {
+            double averageGrade = Double.parseDouble(record.get(AVERAGE_GRADE));
+            int recordBookNumber = Integer.parseInt(record.get(RECORD_BOOK_NUMBER));
+            return new StudentBuilder()
+                    .setGroupNumber(record.get(GROUP_NUMBER))
+                    .setAverageGrade(averageGrade)
+                    .setRecordBookNumber(recordBookNumber)
+                    .build();
+        }
+        catch (NumberFormatException e){
+            throw new IllegalArgumentException(
+                    "Problem at line " + lineOfFile + ". Unacceptable type convertation");
+        }
     }
 
     private static void validateHeader(Map<String, Integer> headerMap) {
