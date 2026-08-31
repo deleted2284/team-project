@@ -14,6 +14,9 @@ import ru.project.ui.creation.file.FileFillStrategy;
 import ru.project.ui.creation.manual.ManualDataSettingsWindow;
 import ru.project.ui.creation.manual.ManualFillSettings;
 import ru.project.ui.creation.manual.ManualFillStrategy;
+import ru.project.ui.creation.random.RandomDataSettingsWindow;
+import ru.project.ui.creation.random.RandomFillSettings;
+import ru.project.ui.creation.random.RandomFillStrategy;
 
 public class CreateCollectionMenu extends BaseModalWindow {
 
@@ -26,6 +29,7 @@ public class CreateCollectionMenu extends BaseModalWindow {
 
   private final ManualDataSettingsWindow manualDataSettingsWindow;
   private final FileDataSettingsWindow fileDataSettingsWindow;
+  private final RandomDataSettingsWindow randomDataSettingsWindow;
 
   public CreateCollectionMenu(WindowBasedTextGUI gui, AppState state) {
 
@@ -37,6 +41,7 @@ public class CreateCollectionMenu extends BaseModalWindow {
 
     this.manualDataSettingsWindow = new ManualDataSettingsWindow(gui, this::setManualFillStrategy);
     this.fileDataSettingsWindow = new FileDataSettingsWindow(gui, this::setFileFillStrategy);
+    this.randomDataSettingsWindow = new RandomDataSettingsWindow(gui, this::setRandomFillStrategy);
 
     Panel panel = new Panel();
     panel.setLayoutManager(new LinearLayout());
@@ -65,9 +70,9 @@ public class CreateCollectionMenu extends BaseModalWindow {
     fillStrategy = new FileFillStrategy(settings);
   }
 
-  // private void setRandomFillStrategy(RandomFillSettings settings) {
-  //   fillStrategy = new RandomFillStrategy(settings);
-  // }
+  private void setRandomFillStrategy(RandomFillSettings settings) {
+    fillStrategy = new RandomFillStrategy(settings);
+  }
 
   private void setupCurrentFillMethod() {
     switch (selectedFillMethod) {
@@ -75,9 +80,7 @@ public class CreateCollectionMenu extends BaseModalWindow {
 
       case FILE -> fileDataSettingsWindow.showModal();
 
-      case RANDOM ->
-          MessageWindow.showModal(
-              gui, "Для случайных данных дополнительные настройки не требуются.");
+      case RANDOM -> randomDataSettingsWindow.showModal();
     }
   }
 
