@@ -23,7 +23,7 @@ public class ManualDataSource implements DataSource{
     }
     @Override
     public MyList<Student> create() {
-        MyList<Student> result = new MyLinkedList<>();
+        /*MyList<Student> result = new MyLinkedList<>();
         String strToParse;
         Student student;
         Scanner scanner = new Scanner(System.in);
@@ -39,7 +39,7 @@ public class ManualDataSource implements DataSource{
                 result.add(student);
             }
         }
-        scanner.close();
+        scanner.close();*/
         return null;
     }
 }
