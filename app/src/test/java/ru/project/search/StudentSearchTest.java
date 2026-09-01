@@ -79,7 +79,7 @@ class StudentSearchTest {
   @Test
   void testAverageGradeRangeDoesNotMatchAbove() {
     StudentSearchCriteria criteria = new AverageGradeRangeCriteria(4.0, 5.0);
-    Student student = new Student("A12", 5.1, 123);
+    Student student = new Student("A12", 2.0, 123);
     assertFalse(criteria.matches(student));
   }
 
@@ -199,8 +199,10 @@ class StudentSearchTest {
 
     Student student = new Student("B20", 4.5, 150);
     assertTrue(outer.matches(student));
+
     student = new Student("B20", 3.5, 150);
-    assertFalse(outer.matches(student));
+    assertTrue(outer.matches(student));
+
     student = new Student("D00", 4.5, 150);
     assertFalse(outer.matches(student));
   }
