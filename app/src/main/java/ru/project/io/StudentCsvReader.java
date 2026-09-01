@@ -33,7 +33,7 @@ public class StudentCsvReader implements Iterator<Student> {
     }
 
     try {
-      CSVFormat format = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build();
+      CSVFormat format = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get();
       this.parser = CSVParser.parse(path, StandardCharsets.UTF_8, format);
       validateHeader(parser.getHeaderMap());
       this.records = parser.iterator();
