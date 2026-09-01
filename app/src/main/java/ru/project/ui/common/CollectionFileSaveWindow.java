@@ -42,7 +42,7 @@ public class CollectionFileSaveWindow {
             MessageDialogButton.No);
 
     if (result == MessageDialogButton.Yes) {
-      saveToFile(selectedFile);
+      createAndSaveToFile(selectedFile);
     }
   }
 
@@ -53,6 +53,20 @@ public class CollectionFileSaveWindow {
         .setActionLabel("Сохранить")
         .build()
         .showDialog(gui);
+  }
+
+  private void createAndSaveToFile(File file) {
+    try {
+      if (!file.createNewFile()) {
+        MessageWindow.showModal(gui, "Не удалось создать файл.");
+        return;
+      }
+
+      saveToFile(file);
+
+    } catch (IOException e) {
+      MessageWindow.showModal(gui, "Не удалось создать файл.");
+    }
   }
 
   private void saveToFile(File file) {
