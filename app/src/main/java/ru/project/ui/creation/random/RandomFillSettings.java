@@ -2,6 +2,8 @@ package ru.project.ui.creation.random;
 
 public class RandomFillSettings {
 
+  private Integer collectionSize;
+
   private String minGroupNumber;
   private String maxGroupNumber;
 
@@ -12,6 +14,8 @@ public class RandomFillSettings {
   private Integer maxRecordBookNumber;
 
   public RandomFillSettings() {
+    this.collectionSize = null;
+
     this.minGroupNumber = null;
     this.maxGroupNumber = null;
 
@@ -20,6 +24,14 @@ public class RandomFillSettings {
 
     this.minRecordBookNumber = null;
     this.maxRecordBookNumber = null;
+  }
+
+  public Integer getCollectionSize() {
+    return collectionSize;
+  }
+
+  public void setCollectionSize(Integer collectionSize) {
+    this.collectionSize = collectionSize;
   }
 
   public String getMinGroupNumber() {

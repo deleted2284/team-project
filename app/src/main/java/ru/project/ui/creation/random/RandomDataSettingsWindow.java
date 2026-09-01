@@ -15,6 +15,7 @@ public class RandomDataSettingsWindow extends BaseModalWindow {
   private final RandomFillSettings settings;
   private final Consumer<RandomFillSettings> onApply;
 
+  private final Label collectionSizeLabel;
   private final Label minGroupNumberLabel;
   private final Label maxGroupNumberLabel;
   private final Label minAverageGradeLabel;
@@ -32,6 +33,10 @@ public class RandomDataSettingsWindow extends BaseModalWindow {
     Panel panel = new Panel();
     panel.setLayoutManager(new LinearLayout());
 
+    collectionSizeLabel =
+        new Label("Размер коллекции: " + getValueOrDefault(settings.getCollectionSize()));
+
+    panel.addComponent(collectionSizeLabel);
     minGroupNumberLabel =
         new Label("Минимальный номер группы: " + getValueOrDefault(settings.getMinGroupNumber()));
 
@@ -61,6 +66,8 @@ public class RandomDataSettingsWindow extends BaseModalWindow {
     panel.addComponent(minRecordBookNumberLabel);
     panel.addComponent(maxRecordBookNumberLabel);
 
+    panel.addComponent(new Button("Задать размер коллекции...", this::setCollectionSize));
+
     panel.addComponent(new Button("Задать минимальный номер группы", this::setMinGroupNumber));
 
     panel.addComponent(new Button("Задать максимальный номер группы", this::setMaxGroupNumber));
@@ -80,6 +87,41 @@ public class RandomDataSettingsWindow extends BaseModalWindow {
     panel.addComponent(new Button("Назад", this::close));
 
     setComponent(panel);
+  }
+
+  private void setCollectionSize() {
+    InputValueWindow window =
+        new InputValueWindow(
+            gui,
+            "Размер коллекции",
+            "Введите размер коллекции:",
+            settings.getCollectionSize() == null
+                ? null
+                : String.valueOf(settings.getCollectionSize()),
+            value -> {
+              try {
+                int collectionSize = Integer.parseInt(value);
+
+                if (collectionSize <= 0) {
+                  MessageWindow.showModal(gui, "Размер коллекции должен быть больше 0.");
+
+                  return false;
+                }
+
+                settings.setCollectionSize(collectionSize);
+
+                collectionSizeLabel.setText("Размер коллекции: " + collectionSize);
+
+                return true;
+
+              } catch (NumberFormatException e) {
+                MessageWindow.showModal(gui, "Введите целое число.");
+
+                return false;
+              }
+            });
+
+    window.showModal();
   }
 
   private void setMinGroupNumber() {
@@ -302,6 +344,12 @@ public class RandomDataSettingsWindow extends BaseModalWindow {
   }
 
   private void apply() {
+    if (settings.getCollectionSize() == null) {
+      MessageWindow.showModal(gui, "Сначала задайте размер коллекции.");
+
+      return;
+    }
+
     onApply.accept(settings);
 
     MessageWindow.showModal(gui, "Настройки создания коллекции случайно успешно применены.");
