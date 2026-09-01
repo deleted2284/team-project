@@ -25,9 +25,9 @@ public class StudentCsvReader implements Iterator<Student> {
 
   private int lineOfFile;
 
-  public StudentCsvReader(String absoluteFilePath) {
+  public StudentCsvReader(Path path2) {
     lineOfFile = 0;
-    Path path = Paths.get(absoluteFilePath);
+    Path path = Paths.get(path2);
     if (!path.isAbsolute()) {
       throw new IllegalArgumentException("File path must be absolute");
     }

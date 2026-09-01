@@ -6,14 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import ru.project.student.Student;
 
 class StudentCsvReaderTest {
@@ -23,17 +23,12 @@ class StudentCsvReaderTest {
   // Testing StudentCsvReader
 
   @BeforeAll
-  void generateStudentTestFile(){
+  void generateStudentTestFile() {
     studentPath = tempDir.resolve("students.csv");
     Files.write(
-            studentPath,
-            new String[]{
-                    "groupNumber,averageGrade,recordBookNumber",
-                    "A21,5.0,331",
-                    "A21,4.0,332"
-            },
-            StandardCharsets.UTF_8
-    );
+        studentPath,
+        new String[] {"groupNumber,averageGrade,recordBookNumber", "A21,5.0,331", "A21,4.0,332"},
+        StandardCharsets.UTF_8);
   }
 
   @BeforeEach
@@ -44,14 +39,12 @@ class StudentCsvReaderTest {
   @Test
   void readerTestRejectRelativePath() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> new StudentCsvReader(studentPath.toString()));
+        IllegalArgumentException.class, () -> new StudentCsvReader(studentPath.toString()));
   }
 
   @Test
   void readerRejectPathIsDir() {
-    assertThrows(
-        UncheckedIOException.class, () -> new StudentCsvReader(tempDir.toAbsolutePath()));
+    assertThrows(UncheckedIOException.class, () -> new StudentCsvReader(tempDir.toAbsolutePath()));
   }
 
   @Test
@@ -110,15 +103,10 @@ class StudentCsvReaderTest {
         () -> {
           Path path = tempDir.resolve("fewparameters.csv");
           Files.write(
-                  path,
-                  new String[]{
-                          "groupNumber,averageGrade,recordBookNumber",
-                          "A21,5.0"
-                  },
-                  StandardCharsets.UTF_8
-          );
-          StudentCsvReader reader =
-              new StudentCsvReader(path.toAbsolutePath().toString());
+              path,
+              new String[] {"groupNumber,averageGrade,recordBookNumber", "A21,5.0"},
+              StandardCharsets.UTF_8);
+          StudentCsvReader reader = new StudentCsvReader(path.toAbsolutePath().toString());
           Student student = reader.next();
         });
   }
@@ -130,16 +118,12 @@ class StudentCsvReaderTest {
         () -> {
           Path path = tempDir.resolve("invalid_groupnumber.csv");
           Files.write(
-                  path,
-                  new String[]{
-                          "groupNumber,averageGrade,recordBookNumber",
-                          "AAA,5.0,331",
-                          "A21,4.0,332"
-                  },
-                  StandardCharsets.UTF_8
-          );
-          StudentCsvReader reader =
-              new StudentCsvReader(path.toAbsolutePath().toString());
+              path,
+              new String[] {
+                "groupNumber,averageGrade,recordBookNumber", "AAA,5.0,331", "A21,4.0,332"
+              },
+              StandardCharsets.UTF_8);
+          StudentCsvReader reader = new StudentCsvReader(path.toAbsolutePath().toString());
           Student student = reader.next();
         });
   }
@@ -151,16 +135,12 @@ class StudentCsvReaderTest {
         () -> {
           Path path = tempDir.resolve("invalid_averagegrade.csv");
           Files.write(
-                  path,
-                  new String[]{
-                          "groupNumber,averageGrade,recordBookNumber",
-                          "A21,-5.0,331",
-                          "A21,4.0,332"
-                  },
-                  StandardCharsets.UTF_8
-          );
-          StudentCsvReader reader =
-              new StudentCsvReader(path.toAbsolutePath().toString());
+              path,
+              new String[] {
+                "groupNumber,averageGrade,recordBookNumber", "A21,-5.0,331", "A21,4.0,332"
+              },
+              StandardCharsets.UTF_8);
+          StudentCsvReader reader = new StudentCsvReader(path.toAbsolutePath().toString());
           Student student = reader.next();
         });
   }
@@ -172,38 +152,30 @@ class StudentCsvReaderTest {
         () -> {
           Path path = tempDir.resolve("invalid_recordbooknumber.csv");
           Files.write(
-                  path,
-                  new String[]{
-                          "groupNumber,averageGrade,recordBookNumber",
-                          "A21,5.0,-331",
-                          "A21,4.0,332"
-                  },
-                  StandardCharsets.UTF_8
-          );
-          StudentCsvReader reader =
-              new StudentCsvReader(path.toAbsolutePath().toString());
+              path,
+              new String[] {
+                "groupNumber,averageGrade,recordBookNumber", "A21,5.0,-331", "A21,4.0,332"
+              },
+              StandardCharsets.UTF_8);
+          StudentCsvReader reader = new StudentCsvReader(path.toAbsolutePath().toString());
           Student student = reader.next();
         });
   }
 
   @Test
-  void testInvalidHeader(){
+  void testInvalidHeader() {
     assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              Path path = tempDir.resolve("invalid_header.csv");
-              Files.write(
-                      path,
-                      new String[]{
-                              "groupNumber,averageGrade,recordBookNomber",
-                              "A21,5.0,-331",
-                              "A21,4.0,332"
-                      },
-                      StandardCharsets.UTF_8
-              );
-              StudentCsvReader reader =
-                      new StudentCsvReader(path.toAbsolutePath().toString());
-              Student student = reader.next();
-            });
+        IllegalArgumentException.class,
+        () -> {
+          Path path = tempDir.resolve("invalid_header.csv");
+          Files.write(
+              path,
+              new String[] {
+                "groupNumber,averageGrade,recordBookNomber", "A21,5.0,-331", "A21,4.0,332"
+              },
+              StandardCharsets.UTF_8);
+          StudentCsvReader reader = new StudentCsvReader(path.toAbsolutePath().toString());
+          Student student = reader.next();
+        });
   }
 }
