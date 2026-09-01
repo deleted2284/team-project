@@ -4,6 +4,7 @@ import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.model.AppState;
 import ru.project.ui.base.BaseModalWindow;
+import ru.project.ui.collection.counting.CountOccurrencesMenu;
 import ru.project.ui.collection.search.SearchCollectionMenu;
 import ru.project.ui.collection.sorting.SortCollectionMenu;
 import ru.project.ui.common.CollectionDisplayWindow;
@@ -15,8 +16,7 @@ public class CurrentCollectionMenu extends BaseModalWindow {
 
   private final SortCollectionMenu sortCollectionMenu;
   private final SearchCollectionMenu searchCollectionMenu;
-
-  // private final CountOccurrencesMenu countOccurrencesMenu;
+  private final CountOccurrencesMenu countOccurrencesMenu;
 
   public CurrentCollectionMenu(WindowBasedTextGUI gui, AppState state) {
 
@@ -28,7 +28,7 @@ public class CurrentCollectionMenu extends BaseModalWindow {
 
     this.searchCollectionMenu = new SearchCollectionMenu(gui, state);
 
-    // this.countCollectionMenu = new CountOccurrencesMenu(gui, state);
+    this.countOccurrencesMenu = new CountOccurrencesMenu(gui, state);
 
     ActionListBox menu = new ActionListBox();
     menu.addItem("Показать коллекцию...", this::showCurrentCollection);
@@ -39,7 +39,7 @@ public class CurrentCollectionMenu extends BaseModalWindow {
 
     menu.addItem("Меню поиска элемента в коллекции", searchCollectionMenu::showModal);
 
-    menu.addItem("Меню подсчёта количества вхождений элемента", this::countOccurrences);
+    menu.addItem("Меню подсчёта количества вхождений элемента", countOccurrencesMenu::showModal);
 
     menu.addItem("Выйти", this::close);
 
@@ -56,11 +56,5 @@ public class CurrentCollectionMenu extends BaseModalWindow {
     CollectionFileSaveWindow window = new CollectionFileSaveWindow(gui, state.getMainCollection());
 
     window.showModal();
-  }
-
-  private void countOccurrences() {
-    // CountOccurrencesMenu countOccurrencesMenu = new CountOccurrencesMenu(gui, state);
-    //
-    // countOccurrencesMenu.showModal();
   }
 }
