@@ -3,8 +3,8 @@ package ru.project.search;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
+import ru.project.collection.MyLinkedList;
 import ru.project.student.Student;
 
 class StudentSearchTest {
