@@ -4,11 +4,10 @@ import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import ru.project.collection.MyList;
+import ru.project.io.StudentCsvWriter;
 import ru.project.student.Student;
 
 public class CollectionFileSaveWindow {
@@ -57,14 +56,11 @@ public class CollectionFileSaveWindow {
   }
 
   private void saveToFile(File file) {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    try {
+      StudentCsvWriter writer = new StudentCsvWriter(file.getAbsolutePath());
 
       for (int i = 0; i < collection.size(); i++) {
-        Student student = collection.get(i);
-
-        writer.write(student == null ? "null" : student.toString());
-
-        writer.newLine();
+        writer.write(collection.get(i));
       }
 
       MessageWindow.showModal(gui, "Коллекция успешно сохранена.");
