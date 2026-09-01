@@ -12,12 +12,13 @@ import org.junit.jupiter.api.Test;
 import ru.project.student.Student;
 
 class StudentCsvReaderTest {
+  private final String ABSOLUTE_DIR = "C:\\Users\\Dexp\\TestData\\"
   private StudentCsvReader valideReader;
 
   // Testing StudentCsvReader
   @BeforeEach
   void setUp() {
-    valideReader = new StudentCsvReader("C:\\Users\\Dexp\\TestData\\sample.csv");
+    valideReader = new StudentCsvReader(ABSOLUTE_DIR + "sample.csv");
   }
 
   @Test
@@ -30,14 +31,14 @@ class StudentCsvReaderTest {
   @Test
   void readerRejectPathIsDir() {
     assertThrows(
-        UncheckedIOException.class, () -> new StudentCsvReader("C:\\Users\\Dexp\\TestData"));
+        UncheckedIOException.class, () -> new StudentCsvReader(ABSOLUTE_DIR));
   }
 
   @Test
   void readerTestFileNotExist() {
     assertThrows(
         UncheckedIOException.class,
-        () -> new StudentCsvReader("C:\\Users\\Dexp\\TestData\\sss.csv"));
+        () -> new StudentCsvReader(ABSOLUTE_DIR + "sss.csv"));
   }
 
   @Test
@@ -88,7 +89,7 @@ class StudentCsvReaderTest {
         IllegalArgumentException.class,
         () -> {
           StudentCsvReader reader =
-              new StudentCsvReader("C:\\Users\\Dexp\\TestData\\fewparameters.csv");
+              new StudentCsvReader(ABSOLUTE_DIR + "fewparameters.csv");
           Student student = reader.next();
         });
   }
@@ -99,7 +100,7 @@ class StudentCsvReaderTest {
         IllegalArgumentException.class,
         () -> {
           StudentCsvReader reader =
-              new StudentCsvReader("C:\\Users\\Dexp\\TestData\\invalid_groupnumber.csv");
+              new StudentCsvReader(ABSOLUTE_DIR + "invalid_groupnumber.csv");
           Student student = reader.next();
         });
   }
@@ -110,7 +111,7 @@ class StudentCsvReaderTest {
         IllegalArgumentException.class,
         () -> {
           StudentCsvReader reader =
-              new StudentCsvReader("C:\\Users\\Dexp\\TestData\\invalid_averagegrade.csv");
+              new StudentCsvReader(ABSOLUTE_DIR + "invalid_averagegrade.csv");
           Student student = reader.next();
         });
   }
@@ -121,7 +122,7 @@ class StudentCsvReaderTest {
         IllegalArgumentException.class,
         () -> {
           StudentCsvReader reader =
-              new StudentCsvReader("C:\\Users\\Dexp\\TestData\\invalid_recordbooknumber.csv");
+              new StudentCsvReader(ABSOLUTE_DIR + "invalid_recordbooknumber.csv");
           Student student = reader.next();
         });
   }
