@@ -1,12 +1,10 @@
 package ru.project.random;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
 import ru.project.student.Student;
 import java.util.Random;
 import java.util.regex.Pattern;
-
+import ru.project.student.StudentBuilder;
 public class RandomStudentGenerator
 {
     private static final Random RANDOM = new Random();
@@ -141,9 +139,9 @@ public class RandomStudentGenerator
     private double generateAverageGrade() {
         double min = (minAverageGrade != null) ? minAverageGrade : DEFAULT_MIN_GRADE;
         double max = (maxAverageGrade != null) ? maxAverageGrade : DEFAULT_MAX_GRADE;
-
         double range = max - min;
-        return min + (range * RANDOM.nextDouble());
+        double grade = min + (range * RANDOM.nextDouble());
+        return Math.round(grade * 100.0) / 100.0;
     }
     private int generateRecordBookNumber() {
         int min = (minRecordBookNumber != null) ? minRecordBookNumber : DEFAULT_MIN_RECORD_BOOK;
