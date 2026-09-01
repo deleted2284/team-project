@@ -1,30 +1,37 @@
 package ru.project.random;
-
-import java.util.Random;
-import java.util.regex.Pattern;
 import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
 import ru.project.student.Student;
+import java.util.Random;
+import java.util.regex.Pattern;
 import ru.project.student.StudentBuilder;
-
-public class RandomStudentGenerator {
-  private static final Random RANDOM = new Random();
-  private String minGroupNumber;
-  private String maxGroupNumber;
-  private Double minAverageGrade;
-  private Double maxAverageGrade;
-  private Integer minRecordBookNumber;
-  private Integer maxRecordBookNumber;
-  private static final double DEFAULT_MIN_GRADE = 0.0;
-  private static final double DEFAULT_MAX_GRADE = 5.0;
-  private static final int DEFAULT_MIN_RECORD_BOOK = 1;
-  private static final String GROUP_PATTERN_REGEX = "^[A-Z][0-9]{2}$";
-  private static final Pattern GROUP_PATTERN = Pattern.compile(GROUP_PATTERN_REGEX);
-
-  public RandomStudentGenerator setMinGroupNumber(String minGroupNumber) {
-    if (minGroupNumber != null && !GROUP_PATTERN.matcher(minGroupNumber).matches()) {
-      throw new IllegalArgumentException(
-          "minGroupNumber does not match Student group pattern: " + GROUP_PATTERN_REGEX);
+public class RandomStudentGenerator
+{
+    private static final Random RANDOM = new Random();
+    private String minGroupNumber;
+    private String maxGroupNumber;
+    private Double minAverageGrade;
+    private Double maxAverageGrade;
+    private Integer minRecordBookNumber;
+    private Integer maxRecordBookNumber;
+    private static final double DEFAULT_MIN_GRADE = 0.0;
+    private static final double DEFAULT_MAX_GRADE = 5.0;
+    private static final int DEFAULT_MIN_RECORD_BOOK = 1;
+    private static final String GROUP_PATTERN_REGEX = "^[A-Z][0-9]{2}$";
+    private static final Pattern GROUP_PATTERN = Pattern.compile(GROUP_PATTERN_REGEX);
+    public RandomStudentGenerator setMinGroupNumber(String minGroupNumber) {
+        if (minGroupNumber != null && !GROUP_PATTERN.matcher(minGroupNumber).matches()) {
+            throw new IllegalArgumentException("minGroupNumber does not match Student group pattern: " + GROUP_PATTERN_REGEX);
+        }
+        this.minGroupNumber = minGroupNumber;
+        return this;
+    }
+    public RandomStudentGenerator setMaxGroupNumber(String maxGroupNumber) {
+        if (maxGroupNumber != null && !GROUP_PATTERN.matcher(maxGroupNumber).matches()) {
+            throw new IllegalArgumentException("maxGroupNumber does not match Student group pattern: " + GROUP_PATTERN_REGEX);
+        }
+        this.maxGroupNumber = maxGroupNumber;
+        return this;
     }
     this.minGroupNumber = minGroupNumber;
     return this;
@@ -106,23 +113,12 @@ public class RandomStudentGenerator {
     return result;
   }
 
-  private void validateRanges() {
-
-    double effectiveMinGrade = (minAverageGrade != null) ? minAverageGrade : DEFAULT_MIN_GRADE;
-    double effectiveMaxGrade = (maxAverageGrade != null) ? maxAverageGrade : DEFAULT_MAX_GRADE;
-    if (effectiveMinGrade > effectiveMaxGrade) {
-      throw new IllegalArgumentException("minAverageGrade cannot be greater than maxAverageGrade");
-    }
-    int effectiveMinRecord =
-        (minRecordBookNumber != null) ? minRecordBookNumber : DEFAULT_MIN_RECORD_BOOK;
-    int effectiveMaxRecord =
-        (maxRecordBookNumber != null) ? maxRecordBookNumber : Integer.MAX_VALUE;
-    if (effectiveMaxRecord == Integer.MAX_VALUE) {
-      effectiveMaxRecord = effectiveMinRecord + 999_999;
-    }
-    if (effectiveMinRecord > effectiveMaxRecord) {
-      throw new IllegalArgumentException(
-          "minRecordBookNumber cannot be greater than maxRecordBookNumber");
+    private double generateAverageGrade() {
+        double min = (minAverageGrade != null) ? minAverageGrade : DEFAULT_MIN_GRADE;
+        double max = (maxAverageGrade != null) ? maxAverageGrade : DEFAULT_MAX_GRADE;
+        double range = max - min;
+        double grade = min + (range * RANDOM.nextDouble());
+        return Math.round(grade * 100.0) / 100.0;
     }
     if (minGroupNumber != null && maxGroupNumber != null) {
       if (minGroupNumber.compareTo(maxGroupNumber) > 0) {
