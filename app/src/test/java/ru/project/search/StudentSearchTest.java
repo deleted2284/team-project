@@ -1,8 +1,8 @@
 package ru.project.search;
 
 import org.junit.jupiter.api.Test;
-import ru.project.list.MyList;
-import ru.project.list.MyLinkedList;
+import ru.project.collection.MyList;
+import ru.project.collection.MyLinkedList;
 import ru.project.student.Student;
 
 import static org.junit.jupiter.api.Assertions.*;
