@@ -1,6 +1,7 @@
 package ru.project.io;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,7 +43,7 @@ class StudentCsvReaderTest {
   @Test
   void testSkipsHeader() {
     Student student = valideReader.next();
-    assertTrue(!(student.getGroupNumber() == "groupNumber"));
+    assertNotEquals(student.getGroupNumber(), "groupNumber");
   }
 
   @Test
@@ -55,8 +56,8 @@ class StudentCsvReaderTest {
 
   @Test
   void testNotSkippingFirstStudent() {
-    boolean hn = valideReader.hasNext();
-    hn = valideReader.hasNext();
+    valideReader.hasNext();
+    valideReader.hasNext();
     Student student = valideReader.next();
     assertEquals(student.getGroupNumber(), "A21");
     assertEquals(student.getAverageGrade(), 5.0);
@@ -65,8 +66,8 @@ class StudentCsvReaderTest {
 
   @Test
   void testValidEndsOfFile() {
-    Student student = valideReader.next();
-    student = valideReader.next();
+    valideReader.next();
+    valideReader.next();
     assertTrue(!valideReader.hasNext());
   }
 
