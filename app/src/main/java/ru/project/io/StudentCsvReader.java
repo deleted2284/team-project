@@ -14,7 +14,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import ru.project.student.Student;
 import ru.project.student.StudentBuilder;
-  public class StudentCsvReader implements Iterator<Student> {
+  public class StudentCsvReader implements Iterator<Student>, AutoCloseable {
   private static final String GROUP_NUMBER = "groupNumber";
   private static final String AVERAGE_GRADE = "averageGrade";
   private static final String RECORD_BOOK_NUMBER = "recordBookNumber";
@@ -29,7 +29,7 @@ import ru.project.student.StudentBuilder;
         CSVFormat format = CSVFormat.DEFAULT.builder()
                 .setHeader()
                 .setSkipHeaderRecord(true)
-                .build();
+                .get();
         this.parser = CSVParser.parse(path, StandardCharsets.UTF_8, format);
         validateHeader(parser.getHeaderMap());
         this.records = parser.iterator();

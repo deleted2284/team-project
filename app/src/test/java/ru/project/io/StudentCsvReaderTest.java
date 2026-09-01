@@ -1,22 +1,17 @@
 package ru.project.io;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.io.UncheckedIOException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.NoSuchElementException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import ru.project.student.Student;
-import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
 import ru.project.collectors.MyCollectors;
-import ru.project.collectors.MyListCollector;
+import static org.junit.jupiter.api.Assertions.*;
 class StudentCsvReaderTest {
     @TempDir
     Path tempDir;
@@ -25,8 +20,8 @@ class StudentCsvReaderTest {
         Path csv = tempDir.resolve("students.csv");
         String content = String.join("\n",
                 "groupNumber,averageGrade,recordBookNumber",
-                "M10,4.5,12345",   // валидно: 1 буква + 2 цифры
-                "B05,3.8,12346"    // валидно
+                "M10,4.5,12345",
+                "B05,3.8,12346"
         );
         Files.writeString(csv, content, StandardCharsets.UTF_8);
         try (var reader = new StudentCsvReader(csv.toAbsolutePath())) {
@@ -67,14 +62,15 @@ class StudentCsvReaderTest {
                 M101,4.5
                 """;
         Files.writeString(csv, content, StandardCharsets.UTF_8);
-        var reader = new StudentCsvReader(csv.toAbsolutePath());
-        assertTrue(reader.hasNext());
-        // следующая строка имеет только 2 колонки
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                reader::next
-        );
-        assertTrue(ex.getMessage().contains("Expected 3 columns"));
+        try (var reader = new StudentCsvReader(csv.toAbsolutePath())) {
+            assertTrue(reader.hasNext());
+
+            IllegalArgumentException ex = assertThrows(
+                    IllegalArgumentException.class,
+                    reader::next
+            );
+            assertTrue(ex.getMessage().contains("Expected 3 columns"));
+        }
     }
     @Test
     void shouldTestparseErrorThrowsExceptionWithDetails() throws IOException {
@@ -84,14 +80,15 @@ class StudentCsvReaderTest {
                 M101,not-a-number,12345
                 """;
         Files.writeString(csv, content, StandardCharsets.UTF_8);
+        try (var reader = new StudentCsvReader(csv.toAbsolutePath())) {
+            assertTrue(reader.hasNext());
 
-        var reader = new StudentCsvReader(csv.toAbsolutePath());
-        assertTrue(reader.hasNext());
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                reader::next
-        );
-        assertTrue(ex.getMessage().contains("cannot parse averageGrade"));
+            IllegalArgumentException ex = assertThrows(
+                    IllegalArgumentException.class,
+                    reader::next
+            );
+            assertTrue(ex.getMessage().contains("cannot parse averageGrade"));
+        }
     }
     @Test
     void shouldTestemptyDataAfterHeaderThrowsNoSuchElement() throws IOException {
@@ -100,17 +97,22 @@ class StudentCsvReaderTest {
                 groupNumber,averageGrade,recordBookNumber
                 """;
         Files.writeString(csv, content, StandardCharsets.UTF_8);
-        var reader = new StudentCsvReader(csv.toAbsolutePath());
-        assertFalse(reader.hasNext());
-        assertThrows(NoSuchElementException.class, reader::next);
+
+        // ИСПРАВЛЕНО: добавлен try-with-resources
+        try (var reader = new StudentCsvReader(csv.toAbsolutePath())) {
+            assertFalse(reader.hasNext());
+
+            assertThrows(NoSuchElementException.class, reader::next);
+        }
     }
     @Test
     void shouldTestrelativePathThrowsException() {
         Path relative = Path.of("relative-path.csv");
+
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> new StudentCsvReader(relative)
         );
         assertTrue(ex.getMessage().contains("absolute"));
     }
-}
+    }
