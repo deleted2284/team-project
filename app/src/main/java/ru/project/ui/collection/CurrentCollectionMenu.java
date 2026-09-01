@@ -4,6 +4,7 @@ import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import ru.project.model.AppState;
 import ru.project.ui.base.BaseModalWindow;
+import ru.project.ui.collection.search.SearchCollectionMenu;
 import ru.project.ui.collection.sorting.SortCollectionMenu;
 import ru.project.ui.common.CollectionDisplayWindow;
 import ru.project.ui.common.CollectionFileSaveWindow;
@@ -13,8 +14,8 @@ public class CurrentCollectionMenu extends BaseModalWindow {
   private final AppState state;
 
   private final SortCollectionMenu sortCollectionMenu;
+  private final SearchCollectionMenu searchCollectionMenu;
 
-  // private final SearchCollectionMenu searchCollectionMenu;
   // private final CountOccurrencesMenu countOccurrencesMenu;
 
   public CurrentCollectionMenu(WindowBasedTextGUI gui, AppState state) {
@@ -25,18 +26,18 @@ public class CurrentCollectionMenu extends BaseModalWindow {
 
     this.sortCollectionMenu = new SortCollectionMenu(gui, state);
 
-    // this.searchCollectionMenu = new SearchCollectionMenu(gui, state);
+    this.searchCollectionMenu = new SearchCollectionMenu(gui, state);
+
     // this.countCollectionMenu = new CountOccurrencesMenu(gui, state);
 
     ActionListBox menu = new ActionListBox();
-
     menu.addItem("Показать коллекцию...", this::showCurrentCollection);
 
     menu.addItem("Сохранить коллекцию в файл...", this::saveCurrentCollection);
 
     menu.addItem("Меню сортировки коллекции", sortCollectionMenu::showModal);
 
-    menu.addItem("Меню поиска элемента в коллекции", this::searchCollection);
+    menu.addItem("Меню поиска элемента в коллекции", searchCollectionMenu::showModal);
 
     menu.addItem("Меню подсчёта количества вхождений элемента", this::countOccurrences);
 
@@ -55,12 +56,6 @@ public class CurrentCollectionMenu extends BaseModalWindow {
     CollectionFileSaveWindow window = new CollectionFileSaveWindow(gui, state.getMainCollection());
 
     window.showModal();
-  }
-
-  private void searchCollection() {
-    // SearchCollectionMenu searchCollectionMenu = new SearchCollectionMenu(gui, state);
-    //
-    // searchCollectionMenu.showModal();
   }
 
   private void countOccurrences() {
