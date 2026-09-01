@@ -1,4 +1,4 @@
-package ru.project.ui.sorting;
+package ru.project.ui.collection.sorting;
 
 public enum SortField {
   GROUP_NUMBER,

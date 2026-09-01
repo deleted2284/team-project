@@ -78,8 +78,9 @@ class SortStrategyTest {
     list.add(new Student("A05", 4.5, 5));
     list.add(new Student("A06", 4.5, 4));
 
-    EvenOnlyMergeSortStrategy<Student> strategy =
-        new EvenOnlyMergeSortStrategy<>(Student::getRecordBookNumber);
+    EvenOnlySortStrategy<Student> strategy =
+        new EvenOnlySortStrategy<>(new MergeSortStrategy<Student>(), Student::getRecordBookNumber);
+
     strategy.sort(list, Comparator.comparingInt(Student::getRecordBookNumber));
 
     int[] expected = {7, 2, 3, 4, 5, 8};
@@ -95,8 +96,8 @@ class SortStrategyTest {
     list.add(new Student("A02", 4.5, 3));
     list.add(new Student("A03", 4.5, 5));
 
-    EvenOnlyMergeSortStrategy<Student> strategy =
-        new EvenOnlyMergeSortStrategy<>(Student::getRecordBookNumber);
+    EvenOnlySortStrategy<Student> strategy =
+        new EvenOnlySortStrategy<>(new MergeSortStrategy<Student>(), Student::getRecordBookNumber);
     strategy.sort(list, Comparator.comparingInt(Student::getRecordBookNumber));
 
     int[] expected = {1, 3, 5};
@@ -112,8 +113,8 @@ class SortStrategyTest {
     list.add(new Student("A02", 4.5, 2));
     list.add(new Student("A03", 4.5, 6));
 
-    EvenOnlyMergeSortStrategy<Student> strategy =
-        new EvenOnlyMergeSortStrategy<>(Student::getRecordBookNumber);
+    EvenOnlySortStrategy<Student> strategy =
+        new EvenOnlySortStrategy<>(new MergeSortStrategy<Student>(), Student::getRecordBookNumber);
     strategy.sort(list, Comparator.comparingInt(Student::getRecordBookNumber));
 
     int[] expected = {2, 4, 6};

@@ -1,4 +1,4 @@
-package ru.project.ui.sorting;
+package ru.project.ui.collection.sorting;
 
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.Button;
