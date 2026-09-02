@@ -1,7 +1,7 @@
 package ru.project.ui.creation.manual;
 
-import ru.project.collection.MyLinkedList;
 import ru.project.collection.MyList;
+import ru.project.collectors.MyCollectors;
 import ru.project.student.Student;
 import ru.project.ui.creation.FillStrategy;
 
@@ -15,14 +15,6 @@ public class ManualFillStrategy implements FillStrategy {
 
   @Override
   public MyList<Student> create() {
-    MyList<Student> mainCollection = new MyLinkedList<>();
-
-    MyList<Student> manualDataCollection = settings.getCollection();
-
-    for (int i = 0; i < manualDataCollection.size(); i++) {
-      mainCollection.add(manualDataCollection.get(i));
-    }
-
-    return mainCollection;
+    return settings.getCollection().stream().collect(MyCollectors.toMyList());
   }
 }
