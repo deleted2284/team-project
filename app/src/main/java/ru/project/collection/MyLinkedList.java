@@ -1,11 +1,14 @@
 package ru.project.collection;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class MyLinkedList<T> implements MyList<T> {
   private Node<T> head;
   private int size;
 
+  @Override
   public void add(T value) {
     if (head == null) {
       this.head = new Node<>(value);
@@ -19,6 +22,7 @@ public class MyLinkedList<T> implements MyList<T> {
     size++;
   }
 
+  @Override
   public T get(int index) {
     int currentIndex = 0;
     Node<T> temp = head;
@@ -34,6 +38,7 @@ public class MyLinkedList<T> implements MyList<T> {
     throw new IllegalArgumentException();
   }
 
+  @Override
   public void remove(int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException();
@@ -57,6 +62,7 @@ public class MyLinkedList<T> implements MyList<T> {
     }
   }
 
+  @Override
   public T set(int index, T value) {
     if (index < 0 || index >= size) {
       throw new IllegalArgumentException();
@@ -79,6 +85,8 @@ public class MyLinkedList<T> implements MyList<T> {
   public boolean isEmpty() {
     return size == 0;
   }
+
+  @Override
   public void addAll(MyList<? extends T> collection) {
     if (collection == null || collection.isEmpty()) {
       return;
@@ -99,6 +107,11 @@ public class MyLinkedList<T> implements MyList<T> {
       temp = temp.getNext();
     }
     return Arrays.toString(res);
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return IntStream.range(0, size()).mapToObj(this::get);
   }
 
   private static class Node<T> {
