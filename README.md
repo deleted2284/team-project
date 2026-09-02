@@ -254,3 +254,22 @@ java -jar target/app-1.0-SNAPSHOT.jar
 ```text
 ru.project.App
 ```
+
+### Особенности сборки и запуска приложения под Windows
+
+В `pom.xml` добавить:
+
+```xml
+```
+
+Соберите проект:
+
+```bash
+mvn clean package
+```
+
+Запустите собранное приложение:
+
+```bash
+javaw -jar target/app-1.0-SNAPSHOT.jar
+```
