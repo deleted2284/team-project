@@ -101,13 +101,17 @@ public class CreateCollectionMenu extends BaseModalWindow {
   private void updateMainCollection() {
     if (fillStrategy == null) {
       MessageWindow.showModal(gui, "Сначала настройте способ заполнения.");
-
       return;
     }
 
-    state.setMainCollection(fillStrategy.create());
+    try {
+      state.setMainCollection(fillStrategy.create());
 
-    MessageWindow.showModal(gui, "Коллекция успешно создана.");
+      MessageWindow.showModal(gui, "Коллекция успешно создана.");
+
+    } catch (RuntimeException e) {
+      MessageWindow.showModal(gui, "Не удалось создать коллекцию.");
+    }
   }
 
   private String getFillMethodName(FillMethod fillMethod) {
